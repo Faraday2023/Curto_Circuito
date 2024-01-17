@@ -10,6 +10,19 @@ corrente_base = None
 tensao = None
 potencia = None
 
+# Função de menu
+def exibir_menu():
+    print('-'*40)
+    print("Escolha uma opção:")
+    print('-'*40)
+    print("1. Calcular corrente base")
+    print("2. Cadastrar impedâncias")
+    print("3. Calcular Curto-Circuito-Trifásico-Simétrico")
+    print("4. Calcular Curto-Circuito-Monofásico")
+    print("5. Calcular Potência de Curto-Circuito")
+    print("0. Sair")
+    print('-'*40)
+
 # FUNÇÃO PARA DETERMINAÇÃO DE IMPEDÂNCIAS
 def obter_impedancia():
     parte_real = float(input('Digite a parte real da impedância: '))
