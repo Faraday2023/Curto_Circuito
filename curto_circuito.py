@@ -2,7 +2,7 @@
 
 # BIBLIOTECAS
 from funcionalidades import valores_base, obter_impedancia, corrente_curto_trifasica_simetrica, corrente_curto_monofasica
-from funcionalidades import potencia_de_curto_circuito, exibir_menu
+from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador
 from time import sleep
 
 # MAIN
@@ -35,6 +35,10 @@ while True:
     elif escolha == "5":
         pot_cc = potencia_de_curto_circuito() # POTÊNCIA DE CURTO-CIRCUITO
         print(pot_cc)
+    
+    elif escolha == "6":
+        trafo_escolhido = tipo_transformador()
+        print(trafo_escolhido)
 
     elif escolha == "0":
         break
