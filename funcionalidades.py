@@ -10,7 +10,7 @@ corrente_base = None
 tensao = 13800
 potencia = 100000000
 
-# Função de menu
+# FUNÇÃO DE MENU
 def exibir_menu():
     print('-'*40)
     print("Escolha uma opção:")
@@ -71,6 +71,7 @@ def potencia_de_curto_circuito():
     
     return round(potência_cc,2)
 
+# MODELANDO TRANSFORMADOR
 def tipo_transformador():
 
     global tensao, potencia
@@ -100,6 +101,7 @@ def tipo_transformador():
         print('*'*50)
         pot_trafo = str(input('Digite a potência do transformador em kVA: '))
         tensao_primaria = str(input('Digite a tensão nominal primária: '))
+        impedancia_de_placa = str(input('Digite a impedância percentual de placa do transformador: '))
         
         if pot_trafo == '15':
             perdas_no_cobre = 300
@@ -162,5 +164,15 @@ def tipo_transformador():
 
         resistencia_percentual = perdas_no_cobre/(10*int(pot_trafo))
         resistencia_percentual_base = (resistencia_percentual/100)*((potencia/(int(pot_trafo)*1000))*(int(tensao_primaria)/tensao))
+        impedancia_percentual_base = (float(impedancia_de_placa)/100)*((potencia/(int(pot_trafo)*1000))*(int(tensao_primaria)/tensao))
+        reatancia_percentual_base = math.sqrt((math.pow(impedancia_percentual_base,2)-math.pow(resistencia_percentual_base,2)))
+        print(resistencia_percentual_base)
 
-a = tipo_transformador()
+        return complex(resistencia_percentual_base, reatancia_percentual_base)
+
+def curto_simetrico_transformador(suprimento, condutores, transformador):
+    tensao_secundaria = str(input('Digite a tensão no secundário do transformador: '))
+    corrente_base_secundaria = potencia/(math.sqrt(3)*tensao_secundaria)
+    impedancia_acumulada = suprimento + condutores + transformador
+    curto_simetrico_trafo = corrente_base_secundaria/impedancia_acumulada
+
