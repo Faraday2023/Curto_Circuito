@@ -14,11 +14,12 @@ while True:
 
     if escolha == "1":
         corrente_base = valores_base() # CORRENTE BASE DO SISTEMA
+        print(corrente_base)
 
     elif escolha == "2":
     # IMPEDÂNCIAS 
         impedancia_reduzida_positiva = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA POSITIVA REDUZIDA DO SISTEMA
-        impedancia_reduzida_negativa = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA POSITIVA REDUZIDA DO SISTEMA
+        impedancia_reduzida_negativa = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA NEGATIVA REDUZIDA DO SISTEMA
         impedancia_reduzida_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO REDUZIDA DO SISTEMA
         impedancia_trafo_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO DO TRANSFORMADOR
         impedancia_condutores_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO DOS CONDUTORES
@@ -29,7 +30,7 @@ while True:
         print(tri)
 
     elif escolha == "4":
-        mono = corrente_curto_monofasica(impedancia_reduzida_zero, impedancia_condutores_zero, impedancia_trafo_zero) # ICC MONO MÁX
+        mono = corrente_curto_monofasica(impedancia_reduzida_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, impedancia_trafo_zero, corrente_base) # ICC MONO MÁX
         print(mono)
 
     elif escolha == "5":
@@ -37,8 +38,21 @@ while True:
         print(pot_cc)
     
     elif escolha == "6":
-        trafo_escolhido = tipo_transformador()
+        trafo_escolhido = tipo_transformador() # MODELANDO TRANSFORMADOR
         print(trafo_escolhido)
+    
+    elif escolha == "7":
+        corrente_base_secundaria = valores_base()
+        impedancia_acumulada_positiva = impedancia_reduzida_positiva + trafo_escolhido
+        corrente_curto_terminal_trafo = corrente_curto_trifasica_simetrica(impedancia_acumulada_positiva)
+        print('*'*50)
+        print(corrente_base_secundaria)
+        print(corrente_curto_terminal_trafo)
+    
+    elif escolha == "8":
+
+        mono_secundario = corrente_curto_monofasica(impedancia_reduzida_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
+        print(mono_secundario)
 
     elif escolha == "0":
         break
