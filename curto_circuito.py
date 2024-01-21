@@ -2,7 +2,7 @@
 
 # BIBLIOTECAS
 from funcionalidades import valores_base, obter_impedancia, corrente_curto_trifasica_simetrica, corrente_curto_monofasica
-from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador
+from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador, impedancia_alimentadores
 from time import sleep
 
 # MAIN
@@ -53,6 +53,13 @@ while True:
 
         mono_secundario = corrente_curto_monofasica(impedancia_reduzida_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
         print(mono_secundario)
+    
+    elif escolha == "9":
+
+        comprimento = float(input('Qual o comprimento do alimentador: '))
+        cabos_paralelos = float(input('Digite quantos cabos por fase tem no circuito: '))
+        impedancia_alimentador = impedancia_alimentadores(comprimento, cabos_paralelos)
+        print(impedancia_alimentador)
 
     elif escolha == "0":
         break
