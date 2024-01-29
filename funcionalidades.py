@@ -25,6 +25,7 @@ def exibir_menu():
     print("7. Calcular curto trifásico nos terminais do trafo")
     print("8. Calcular curto monofásico nos terminais do trafo")
     print("9. Calcular impedancia do alimentador")
+    print("10. Calcular impedância do barramento")
     print("0. Sair")
     print('-'*40)
 
@@ -163,3 +164,28 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase):
         return resistencia_circuito_base_nova, reatancia_circuito_base_nova, impedancia_circuito
     else:
         print('Opção de cabo inválida')
+
+def impedancia_barramento(largura, espessura, secao_bar,comprimento_bar, barra_por_fase):
+    global potencia, tensao_secundaria
+
+    dados_barramento = {
+        '12': {'2': {'23.5': {'resistencia_positiva': 0.9297, 'reatancia_positiva': 0.2859}}},
+        '15': {'2': {'29.5': {'resistencia_positiva': 0.7406, 'reatancia_positiva': 0.2774}},'3':{'resistencia_positiva': 0.4909, 'reatancia_positiva': 0.2619}},
+        # Adicione mais dados conforme necessário
+        # Adicione mais dados conforme necessário
+    }
+
+    dados = dados_barramento.get(largura, {}).get(espessura, {}).get(secao_bar)
+
+    if dados:
+
+        resistencia_do_barramento = (dados['resistencia_positiva'] * comprimento_bar) / (1000 * barra_por_fase)
+        reatancia_do_barramento = (dados['reatancia_positiva'] * comprimento_bar) / (1000 * barra_por_fase)
+    
+        resistencia_barramento_base_nova = (resistencia_do_barramento * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
+        reatancia_barramento_base_nova = (reatancia_do_barramento * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
+        impedancia_barramento = complex(resistencia_barramento_base_nova, reatancia_barramento_base_nova)
+
+        return resistencia_barramento_base_nova, reatancia_barramento_base_nova, impedancia_barramento
+    else:
+        print('Combinação de largura, espessura e seção do barramento inválida')
