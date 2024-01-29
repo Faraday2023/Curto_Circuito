@@ -78,61 +78,52 @@ def potencia_de_curto_circuito():
 
 # MODELANDO TRANSFORMADOR
 def tipo_transformador():
-    global tensao, potencia
-    print('*'*50)
-    selecao = input('1) Dados obtidos por ensaio\n2) Dados obtidos por tabela\n')
+    print('*' * 50)
+    selecao = str(input('1) Dados obtidos por ensaio\n2) Dados obtidos por tabela\n'))
 
     if selecao == '1':
         corrente_ensaio_cc = float(input('Digite o valor da corrente de curto-circuito: '))
         impedancia_cc_primario = tensao / (math.sqrt(3) * corrente_ensaio_cc)
+        tipo = str(input('O transformador é núcleo envolvente ou núcleo envolvido: '))
+        ligacao = str(input('1) Y-Y aterrado, 2) Y aterrado-DELTA, 3) Y-DELTA, 4) DELTA-DELTA: '))
 
-        tipo = input('O transformador é núcleo envolvente ou núcleo envolvido: ')
-        ligacao = input('1) Y-Y aterrado, 2) Y aterrado-DELTA, 3) Y-DELTA, 4) DELTA-DELTA): ')
-
-        if ligacao in ['1', '2']:
+        if ligacao == '1':
             sequencia_positiva = sequencia_negativa = sequencia_zero = tensao / corrente_ensaio_cc
+        elif ligacao == '2':
+            sequencia_positiva_lado_y = sequencia_negativa = sequencia_zero = tensao / corrente_ensaio_cc
+            sequencia_positiva_lado_delta = sequencia_negativa = sequencia_zero = math.inf
         elif ligacao in ['3', '4']:
             sequencia_zero = math.inf
         else:
             print('Opção inválida.')
 
     elif selecao == '2':
-        print('*'*50)
-        pot_trafo = input('Digite a potência do transformador em kVA: ')
-        tensao_primaria = input('Digite a tensão nominal primária: ')
-        impedancia_de_placa = input('Digite a impedância percentual de placa do transformador: ')
+        print('*' * 50)
+        pot_trafo = str(input('Digite a potência do transformador em kVA: '))
+        tensao_primaria = str(input('Digite a tensão nominal primária: '))
+        impedancia_de_placa = str(input('Digite a impedância percentual de placa do transformador: '))
 
         perdas_no_cobre = {
-            '15': 300, '30': 570, '45': 750, '75': 1200, '112.5': 1650,
-            '150': 2050, '225': 2800, '300': 3900, '500': 6400, '750': 10000,
-            '1000': 12500, '1500': 18000
+            '15': 300, '30': 570, '45': 750, '75': 1200,
+            '112.5': 1650, '150': 2050, '225': 2800, '300': {'1': 3900, '2': 3700},
+            '500': {'1': 6400, '2': 6000}, '750': {'1': 10000, '2': 8500},
+            '1000': {'1': 12500, '2': 11000}, '1500': {'1': 18000, '2': 16000}
         }
 
-        try:
-            perdas = perdas_no_cobre[pot_trafo]
-            tensao_op = input('Digite a tensão nominal do trafo: 1) 220\n2) 380 ou 440\n')
+        if pot_trafo == '300' or pot_trafo == '500' or pot_trafo == '750' or pot_trafo == '1000' or pot_trafo == '1500':
+            tensao_op = str(input('Digite a tensão nominal do trafo: 1) 220\n2) 380 ou 440'))
+            perdas_no_cobre = perdas_no_cobre[pot_trafo][tensao_op]
 
-            if tensao_op in ['1', '2']:
-                perdas_no_cobre = perdas
-                resistencia_percentual = perdas_no_cobre / (10 * int(pot_trafo))
-                resistencia_percentual_base = (resistencia_percentual / 100) * (
-                        (potencia / (int(pot_trafo) * 1000)) * (float(tensao_primaria) / tensao))
-                impedancia_percentual_base = (float(impedancia_de_placa) / 100) * (
-                        (potencia / (int(pot_trafo) * 1000)) * (float(tensao_primaria) / tensao))
-                reatancia_percentual_base = math.sqrt(
-                    (math.pow(impedancia_percentual_base, 2) - math.pow(resistencia_percentual_base, 2)))
+        resistencia_percentual = perdas_no_cobre / (10 * int(pot_trafo))
+        resistencia_percentual_base = (resistencia_percentual / 100) * (
+                    (potencia / (int(pot_trafo) * 1000)) * (float(tensao_primaria) / tensao))
+        impedancia_percentual_base = (float(impedancia_de_placa) / 100) * (
+                    (potencia / (int(pot_trafo) * 1000)) * (float(tensao_primaria) / tensao))
+        reatancia_percentual_base = math.sqrt(
+            (math.pow(impedancia_percentual_base, 2) - math.pow(resistencia_percentual_base, 2)))
 
-                return complex(resistencia_percentual_base, reatancia_percentual_base)
+        return complex(resistencia_percentual_base, reatancia_percentual_base)
 
-            else:
-                print('Opção inválida')
-
-        except KeyError:
-            print('Potência do transformador inválida.')
-
-    else:
-        print('Opção inválida.')
-    
 def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase):
     global potencia, tensao_secundaria
 
