@@ -2,7 +2,7 @@
 
 # BIBLIOTECAS
 from funcionalidades import valores_base, obter_impedancia, corrente_curto_trifasica_simetrica, corrente_curto_monofasica
-from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador, impedancia_alimentadores
+from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador, impedancia_alimentadores, impedancia_barramento
 from time import sleep
 
 # MAIN
@@ -60,6 +60,16 @@ while True:
         cabos_paralelos = float(input('Digite quantos cabos por fase tem no circuito: '))
         impedancia_alimentador = impedancia_alimentadores(comprimento, cabos_paralelos)
         print(impedancia_alimentador)
+    
+    elif escolha == "10":
+
+        largura = str(input('Qual a largura do barramento: '))
+        espessura = str(input('Digite a espessura do barramento: '))
+        comprimento_bar = float(input('Digite o comprimento do barramento: '))
+        quant_bar_por_fase = float(input('Digite quantas barras por fase: '))
+        barramento_modelado = impedancia_barramento(largura, espessura, comprimento_bar, quant_bar_por_fase)
+
+        print(barramento_modelado)
 
     elif escolha == "0":
         break
