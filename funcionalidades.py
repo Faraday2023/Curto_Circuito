@@ -5,11 +5,11 @@ import numpy
 import cmath
 
 # VARIÁVEIS GLOBAIS
-
-corrente_base = None
-tensao = 13800
-tensao_secundaria = 380
-potencia = 100000000
+''''
+corrente_base_primaria = None
+tensao_base_primaria = 13800
+tensao_base_secundaria = 380
+potencia = 100000000'''
 
 # FUNÇÃO DE MENU
 def exibir_menu():
@@ -24,7 +24,7 @@ def exibir_menu():
     print("6. Modelando transformador")
     print("7. Calcular curto trifásico nos terminais do trafo")
     print("8. Calcular curto monofásico nos terminais do trafo")
-    print("9. Calcular impedancia do alimentador")
+    print("9. Calcular impedância do alimentador")
     print("10. Calcular impedância do barramento")
     print("0. Sair")
     print('-'*60)
@@ -37,20 +37,23 @@ def obter_impedancia():
 
 # CORRENTE BASE
 def valores_base():
-    global potencia, tensao, corrente_base
+    #global potencia, tensao_base_primaria, corrente_base_primaria
     potencia = int(input('Defina a potência base: '))
-    tensao = int(input('Defina a tensão base: '))
+    tensao_base_primaria = int(input('Defina a tensão base primaria: '))
+    tensao_base_secundaria = int(input('Defina a tensão base secundaria: '))
 
     try:
-        corrente_base = potencia / (tensao * math.sqrt(3))
+        corrente_base_primaria = potencia / (tensao_base_primaria * math.sqrt(3))
+        corrente_base_secundaria = potencia / (tensao_base_secundaria * math.sqrt(3))
+        
     except ZeroDivisionError:
         print("Erro: A tensão base não pode ser zero.")
         return None
     
-    return round(corrente_base, 2)
+    return (round(corrente_base_primaria, 2)),(round(corrente_base_secundaria, 2)),tensao_base_primaria, tensao_base_secundaria, potencia
 
 # CORRENTE DE CURTO TRIFÁSICA SIMÉTRICA 
-def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema):
+def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema, corrente_base):
 
     if corrente_base is None:
         return None  # Lidar com a situação de erro na corrente base
@@ -70,28 +73,27 @@ def corrente_curto_monofasica(impedancia_reduzida,impedancia_zero, impedancia_co
 
 # POTÊNCIA DE CURTO-CIRCUITO
 
-def potencia_de_curto_circuito():
-    global tensao, corrente_base
-
-    potência_cc = math.sqrt(3) * tensao * corrente_base
+def potencia_de_curto_circuito(tensao_base_primaria, corrente_base_primaria):
+    
+    potência_cc = math.sqrt(3) * tensao_base_primaria * corrente_base_primaria
     
     return round(potência_cc,2)
 
 # MODELANDO TRANSFORMADOR
-def tipo_transformador():
+def tipo_transformador(tensao_base_primaria,tensao_base_secundaria, potencia):
     print('*' * 50)
     selecao = str(input('1) Dados obtidos por ensaio\n2) Dados obtidos por tabela\n'))
 
     if selecao == '1':
         corrente_ensaio_cc = float(input('Digite o valor da corrente de curto-circuito: '))
-        impedancia_cc_primario = tensao / (math.sqrt(3) * corrente_ensaio_cc)
+        impedancia_cc_primario = tensao_base_primaria / (math.sqrt(3) * corrente_ensaio_cc)
         tipo = str(input('O transformador é núcleo envolvente ou núcleo envolvido: '))
         ligacao = str(input('1) Y-Y aterrado, 2) Y aterrado-DELTA, 3) Y-DELTA, 4) DELTA-DELTA: '))
 
         if ligacao == '1':
-            sequencia_positiva = sequencia_negativa = sequencia_zero = tensao / corrente_ensaio_cc
+            sequencia_positiva = sequencia_negativa = sequencia_zero = tensao_base_primaria / corrente_ensaio_cc
         elif ligacao == '2':
-            sequencia_positiva_lado_y = sequencia_negativa = sequencia_zero = tensao / corrente_ensaio_cc
+            sequencia_positiva_lado_y = sequencia_negativa = sequencia_zero = tensao_base_primaria / corrente_ensaio_cc
             sequencia_positiva_lado_delta = sequencia_negativa = sequencia_zero = math.inf
         elif ligacao in ['3', '4']:
             sequencia_zero = math.inf
@@ -101,32 +103,32 @@ def tipo_transformador():
     elif selecao == '2':
         print('*' * 50)
         pot_trafo = str(input('Digite a potência do transformador em kVA: '))
-        tensao_primaria = str(input('Digite a tensão nominal primária: '))
+        #tensao_base_primaria = str(input('Digite a tensão nominal primária: '))
         impedancia_de_placa = str(input('Digite a impedância percentual de placa do transformador: '))
 
         perdas_no_cobre = {
             '15': 300, '30': 570, '45': 750, '75': 1200,
-            '112.5': 1650, '150': 2050, '225': 2800, '300': {'1': 3900, '2': 3700},
-            '500': {'1': 6400, '2': 6000}, '750': {'1': 10000, '2': 8500},
-            '1000': {'1': 12500, '2': 11000}, '1500': {'1': 18000, '2': 16000}
+            '112.5': 1650, '150': 2050, '225': 2800, '300': {'220': 3900, '380': 3700},
+            '500': {'220': 6400, '380': 6000}, '750': {'220': 10000, '380': 8500},
+            '1000': {'220': 12500, '380': 11000}, '1500': {'220': 18000, '380': 16000}
         }
 
         if pot_trafo == '300' or pot_trafo == '500' or pot_trafo == '750' or pot_trafo == '1000' or pot_trafo == '1500':
-            tensao_op = str(input('Digite a tensão nominal do trafo: 1) 220\n2) 380 ou 440'))
-            perdas_no_cobre = perdas_no_cobre[pot_trafo][tensao_op]
+            #tensao_base_secundaria = str(input('Digite a tensão nominal do trafo: 1) 220\n2) 380 ou 440'))
+            perdas_no_cobre = perdas_no_cobre[pot_trafo][tensao_base_secundaria]
 
         resistencia_percentual = perdas_no_cobre / (10 * int(pot_trafo))
         resistencia_percentual_base = (resistencia_percentual / 100) * (
-                    (potencia / (int(pot_trafo) * 1000)) * (float(tensao_primaria) / tensao))
+                    (potencia / (int(pot_trafo) * 1000)) * (float(tensao_base_primaria) / tensao_base_primaria))
         impedancia_percentual_base = (float(impedancia_de_placa) / 100) * (
-                    (potencia / (int(pot_trafo) * 1000)) * (float(tensao_primaria) / tensao))
+                    (potencia / (int(pot_trafo) * 1000)) * (float(tensao_base_primaria) / tensao_base_primaria))
         reatancia_percentual_base = math.sqrt(
             (math.pow(impedancia_percentual_base, 2) - math.pow(resistencia_percentual_base, 2)))
 
         return complex(resistencia_percentual_base, reatancia_percentual_base)
 
-def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase):
-    global potencia, tensao_secundaria
+def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase, potencia, tensao_base_secundaria):
+    #global potencia, tensao_base_secundaria
 
     dados_cabos = {
         '1.5': {'resistencia_positiva': 14.8137, 'reatancia_positiva': 0.1378},
@@ -157,16 +159,16 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase):
         resistencia_do_circuito = (dados['resistencia_positiva'] * comprimento_alimentador) / (1000 * cabos_por_fase)
         reatancia_do_circuito = (dados['reatancia_positiva'] * comprimento_alimentador) / (1000 * cabos_por_fase)
 
-        resistencia_circuito_base_nova = (resistencia_do_circuito * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
-        reatancia_circuito_base_nova = (reatancia_do_circuito * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
+        resistencia_circuito_base_nova = (resistencia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
+        reatancia_circuito_base_nova = (reatancia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
         impedancia_circuito = complex(resistencia_circuito_base_nova, reatancia_circuito_base_nova)
 
         return resistencia_circuito_base_nova, reatancia_circuito_base_nova, impedancia_circuito
     else:
         print('Opção de cabo inválida')
 
-def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase):
-    global potencia, tensao_secundaria
+def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase, potencia, tensao_base_secundaria):
+    #global potencia, tensao_base_secundaria
 
     dados_barramento = {
 
@@ -196,8 +198,8 @@ def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase):
         print(dados['resistencia_positiva'])
         reatancia_do_barramento = (dados['reatancia_positiva'] * comprimento_bar) / (1000 * barra_por_fase)
     
-        resistencia_barramento_base_nova = (resistencia_do_barramento * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
-        reatancia_barramento_base_nova = (reatancia_do_barramento * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
+        resistencia_barramento_base_nova = (resistencia_do_barramento * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
+        reatancia_barramento_base_nova = (reatancia_do_barramento * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
         impedancia_barramento = complex(resistencia_barramento_base_nova, reatancia_barramento_base_nova)
 
         return resistencia_barramento_base_nova, reatancia_barramento_base_nova, impedancia_barramento
