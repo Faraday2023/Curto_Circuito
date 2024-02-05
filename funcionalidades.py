@@ -13,9 +13,9 @@ potencia = 100000000
 
 # FUNÇÃO DE MENU
 def exibir_menu():
-    print('-'*40)
+    print('-'*60)
     print("Escolha uma opção:")
-    print('-'*40)
+    print('-'*60)
     print("1. Calcular corrente base")
     print("2. Cadastrar impedâncias")
     print("3. Calcular Curto-Circuito-Trifásico-Simétrico")
@@ -27,7 +27,7 @@ def exibir_menu():
     print("9. Calcular impedancia do alimentador")
     print("10. Calcular impedância do barramento")
     print("0. Sair")
-    print('-'*40)
+    print('-'*60)
 
 # FUNÇÃO PARA DETERMINAÇÃO DE IMPEDÂNCIAS
 def obter_impedancia():
@@ -165,21 +165,35 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase):
     else:
         print('Opção de cabo inválida')
 
-def impedancia_barramento(largura, espessura, secao_bar,comprimento_bar, barra_por_fase):
+def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase):
     global potencia, tensao_secundaria
 
     dados_barramento = {
-        '12': {'2': {'23.5': {'resistencia_positiva': 0.9297, 'reatancia_positiva': 0.2859}}},
-        '15': {'2': {'29.5': {'resistencia_positiva': 0.7406, 'reatancia_positiva': 0.2774}},'3':{'resistencia_positiva': 0.4909, 'reatancia_positiva': 0.2619}},
-        # Adicione mais dados conforme necessário
-        # Adicione mais dados conforme necessário
+
+        '12': {'2': {'resistencia_positiva': 0.9297, 'reatancia_positiva': 0.2859}},
+        '15': {'2': {'resistencia_positiva': 0.7406, 'reatancia_positiva': 0.2774},'3':{'resistencia_positiva': 0.4909, 'reatancia_positiva': 0.2619}},
+        '20': {'2': {'resistencia_positiva': 0.5531, 'reatancia_positiva': 0.2664},'3':{'resistencia_positiva': 0.3672, 'reatancia_positiva': 0.2509},'5':{'resistencia_positiva': 0.2205, 'reatancia_positiva': 0.2317}, '10':{'resistencia_positiva': 0.1098, 'reatancia_positiva': 0.2054}},
+        '25': {'3': {'resistencia_positiva': 0.2932, 'reatancia_positiva': 0.2424},'5':{'resistencia_positiva': 0.1748, 'reatancia_positiva': 0.2229}},
+        '30': {'3': {'resistencia_positiva': 0.2441, 'reatancia_positiva': 0.2355},'5':{'resistencia_positiva': 0.1561, 'reatancia_positiva': 0.2187},'10':{'resistencia_positiva': 0.0731, 'reatancia_positiva': 0.19}},
+        '40': {'3': {'resistencia_positiva': 0.1836, 'reatancia_positiva': 0.2248},'5':{'resistencia_positiva': 0.1098, 'reatancia_positiva': 0.2054}, '10':{'resistencia_positiva': 0.0548, 'reatancia_positiva': 0.1792}},
+        '50': {'5': {'resistencia_positiva': 0.0877, 'reatancia_positiva': 0.1969},'10':{'resistencia_positiva': 0.0438, 'reatancia_positiva': 0.1707}},
+        '60': {'5': {'resistencia_positiva': 0.0731, 'reatancia_positiva': 0.19},'10':{'resistencia_positiva': 0.0365, 'reatancia_positiva': 0.1639}},
+        '80': {'5': {'resistencia_positiva': 0.0548, 'reatancia_positiva': 0.1792},'10':{'resistencia_positiva': 0.0273, 'reatancia_positiva': 0.1530}},
+        '100': {'5':{'resistencia_positiva': 0.0438, 'reatancia_positiva': 0.1707},'10':{'resistencia_positiva': 0.0221, 'reatancia_positiva': 0.1450}},
+        '120': {'10':{'resistencia_positiva': 0.0182, 'reatancia_positiva': 0.1377}},
+        '160': {'10':{'resistencia_positiva': 0.0137, 'reatancia_positiva': 0.1268}},
+        '200': {'10':{'resistencia_positiva': 0.0109, 'reatancia_positiva': 0.1184}}
+
+        # Adicionar mais dados conforme necessário
+        
     }
 
-    dados = dados_barramento.get(largura, {}).get(espessura, {}).get(secao_bar)
+    dados = dados_barramento.get(largura, {}).get(espessura, {})
 
     if dados:
 
         resistencia_do_barramento = (dados['resistencia_positiva'] * comprimento_bar) / (1000 * barra_por_fase)
+        print(dados['resistencia_positiva'])
         reatancia_do_barramento = (dados['reatancia_positiva'] * comprimento_bar) / (1000 * barra_por_fase)
     
         resistencia_barramento_base_nova = (resistencia_do_barramento * 1000) * (potencia / (1000 * (tensao_secundaria ** 2)))
