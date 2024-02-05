@@ -13,8 +13,8 @@ while True:
     sleep(1)
 
     if escolha == "1":
-        corrente_base = valores_base() # CORRENTE BASE DO SISTEMA
-        print(corrente_base)
+        corrente_base_primaria,corrente_base_secundaria,tensao_primaria_base,tensao_secundaria_base, potencia = valores_base() # VALORES BASE DO SISTEMA
+        print(corrente_base_primaria,corrente_base_secundaria, tensao_primaria_base, tensao_secundaria_base, potencia)
 
     elif escolha == "2":
     # IMPEDÂNCIAS 
@@ -26,27 +26,27 @@ while True:
 
     elif escolha == "3":
         # CALCULANDO CURTO-CIRCUITO
-        tri = corrente_curto_trifasica_simetrica(impedancia_reduzida_positiva) # ICC TRIFÁSICO
+        tri = corrente_curto_trifasica_simetrica(impedancia_reduzida_positiva, corrente_base_primaria) # ICC TRIFÁSICO
         print(tri)
 
     elif escolha == "4":
-        mono = corrente_curto_monofasica(impedancia_reduzida_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, impedancia_trafo_zero, corrente_base) # ICC MONO MÁX
+        mono = corrente_curto_monofasica(impedancia_reduzida_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, impedancia_trafo_zero, corrente_base_primaria) # ICC MONO MÁX
         print(mono)
 
     elif escolha == "5":
-        pot_cc = potencia_de_curto_circuito() # POTÊNCIA DE CURTO-CIRCUITO
+        pot_cc = potencia_de_curto_circuito(tensao_primaria_base, corrente_base_primaria) # POTÊNCIA DE CURTO-CIRCUITO
         print(pot_cc)
     
     elif escolha == "6":
-        trafo_escolhido = tipo_transformador() # MODELANDO TRANSFORMADOR
+        trafo_escolhido = tipo_transformador(tensao_primaria_base, str(tensao_secundaria_base), potencia) # MODELANDO TRANSFORMADOR
         print(trafo_escolhido)
     
     elif escolha == "7":
-        corrente_base_secundaria = valores_base()
+        #corrente_base_primaria,corrente_base_secundaria_secundaria = valores_base()
         impedancia_acumulada_positiva = impedancia_reduzida_positiva + trafo_escolhido
-        corrente_curto_terminal_trafo = corrente_curto_trifasica_simetrica(impedancia_acumulada_positiva)
+        corrente_curto_terminal_trafo = corrente_curto_trifasica_simetrica(impedancia_acumulada_positiva, corrente_base_secundaria)
         print('*'*50)
-        print(corrente_base_secundaria)
+        print(corrente_base_primaria, corrente_base_secundaria)
         print(corrente_curto_terminal_trafo)
     
     elif escolha == "8":
@@ -58,7 +58,7 @@ while True:
 
         comprimento = float(input('Qual o comprimento do alimentador: '))
         cabos_paralelos = float(input('Digite quantos cabos por fase tem no circuito: '))
-        impedancia_alimentador = impedancia_alimentadores(comprimento, cabos_paralelos)
+        impedancia_alimentador = impedancia_alimentadores(comprimento, cabos_paralelos, potencia, tensao_secundaria_base)
         print(impedancia_alimentador)
     
     elif escolha == "10":
@@ -67,9 +67,15 @@ while True:
         espessura = str(input('Digite a espessura do barramento: '))
         comprimento_bar = float(input('Digite o comprimento do barramento: '))
         quant_bar_por_fase = float(input('Digite quantas barras por fase: '))
-        barramento_modelado = impedancia_barramento(largura, espessura, comprimento_bar, quant_bar_por_fase)
+        impedancia_barramento_modelado = impedancia_barramento(largura, espessura, comprimento_bar, quant_bar_por_fase, potencia, tensao_secundaria_base)
 
-        print(barramento_modelado)
+        print(impedancia_barramento_modelado)
+    
+    elif escolha == "11": 
+
+        impedancia_qgf_positiva = impedancia_reduzida_positiva + trafo_escolhido + impedancia_alimentador + impedancia_barramento_modelado
+        curto_simetrico_barramento = corrente_curto_trifasica_simetrica(impedancia_qgf_positiva) # ICC TRIFÁSICO
+        curto_monofasico_barramento = corrente_curto_monofasica(impedancia_qgf_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, trafo_escolhido, corrente_base_primaria,corrente_base_secundaria_secundaria)
 
     elif escolha == "0":
         break
