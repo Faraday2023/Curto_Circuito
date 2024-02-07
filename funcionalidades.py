@@ -26,6 +26,7 @@ def exibir_menu():
     print("8. Calcular curto monofásico nos terminais do trafo")
     print("9. Calcular impedância do alimentador")
     print("10. Calcular impedância do barramento")
+    print("11. Curto simétrico e monofásico no barramento")
     print("0. Sair")
     print('-'*60)
 
@@ -66,7 +67,7 @@ def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema, corrente_bas
 # CORRENTE DE CURTO-CIRCUITO FASE/TERRA
 def corrente_curto_monofasica(impedancia_reduzida,impedancia_zero, impedancia_condutores,impedancia_trafo,corrente_base):
     
-    curto_fase_terra = (3 * corrente_base)/((2 *(impedancia_reduzida+impedancia_trafo))+ impedancia_zero + impedancia_condutores+impedancia_trafo)
+    curto_fase_terra = (3 * corrente_base)/((2 *(impedancia_reduzida))+ impedancia_zero + impedancia_condutores+impedancia_trafo)
     magnitude, angulo_radiano = cmath.polar(curto_fase_terra)
     angulo_graus = math.degrees(angulo_radiano)
     return magnitude, angulo_graus
@@ -163,7 +164,7 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase, potencia, 
         reatancia_circuito_base_nova = (reatancia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
         impedancia_circuito = complex(resistencia_circuito_base_nova, reatancia_circuito_base_nova)
 
-        return resistencia_circuito_base_nova, reatancia_circuito_base_nova, impedancia_circuito
+        return impedancia_circuito
     else:
         print('Opção de cabo inválida')
 
@@ -202,6 +203,65 @@ def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase, po
         reatancia_barramento_base_nova = (reatancia_do_barramento * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
         impedancia_barramento = complex(resistencia_barramento_base_nova, reatancia_barramento_base_nova)
 
-        return resistencia_barramento_base_nova, reatancia_barramento_base_nova, impedancia_barramento
+        return impedancia_barramento
     else:
         print('Combinação de largura, espessura e seção do barramento inválida')
+
+def curto_assimétrico(resistencia_total, reatancia_total):
+
+    a = reatancia_total/resistencia_total
+
+    dados_cabos = {
+        '0.4': {'fator_de_assimetria': 1.0},
+        '0.6': {'fator_de_assimetria': 1.0},
+        '0.8': {'fator_de_assimetria': 1.02},
+        '1.0': {'fator_de_assimetria': 1.04},
+        '1.2': {'fator_de_assimetria': 1.07},
+        '1.4': {'fator_de_assimetria': 1.10},
+        '1.6': {'fator_de_assimetria': 1.13},
+        '1.8': {'fator_de_assimetria': 1.16},
+        '2.0': {'fator_de_assimetria': 1.19},
+        '2.2': {'fator_de_assimetria': 1.21},
+        '2.4': {'fator_de_assimetria': 1.24},
+        '2.6': {'fator_de_assimetria': 1.26},
+        '2.8': {'fator_de_assimetria': 1.28},
+        '3.0': {'fator_de_assimetria': 1.30},
+        '3.2': {'fator_de_assimetria': 0.0958},
+        '3.4': {'fator_de_assimetria': 0.0781},
+        '3.6': {'fator_de_assimetria': 0.0608},
+        '3.8': {'fator_de_assimetria': 0.0507},
+        '4.0': {'fator_de_assimetria': 0.0292},
+        '4.2': {'fator_de_assimetria': 14.8137},
+        '4.4': {'fator_de_assimetria': 8.8882},
+        '4.6': {'fator_de_assimetria': 5.5518},
+        '4.8': {'fator_de_assimetria': 3.7045},
+        '5.0': {'fator_de_assimetria': 2.221},
+        '5.5': {'fator_de_assimetria': 1.3899},
+        '6.0': {'fator_de_assimetria': 0.8891},
+        '6.5': {'fator_de_assimetria': 0.6353},
+        '7.0': {'fator_de_assimetria': 0.445},
+        '7.5': {'fator_de_assimetria': 0.3184},
+        '8.0': {'fator_de_assimetria': 0.2352},
+        '8.5': {'fator_de_assimetria': 0.1868},
+        '9.0': {'fator_de_assimetria': 0.1502},
+        '9.5': {'fator_de_assimetria': 0.1226},
+        '10.0': {'fator_de_assimetria': 0.0958},
+        '11.0': {'fator_de_assimetria': 0.0781},
+        '12.0': {'fator_de_assimetria': 0.0608},
+        '13.0': {'fator_de_assimetria': 0.0507},
+        '14.0': {'fator_de_assimetria': 0.0292},
+        '15.0': {'fator_de_assimetria': 0.1226},
+        '20.0': {'fator_de_assimetria': 0.0958},
+        '30.0': {'fator_de_assimetria': 0.0781},
+        '40.0': {'fator_de_assimetria': 0.0608},
+        '50.0': {'fator_de_assimetria': 0.0507},
+        '60.0': {'fator_de_assimetria': 0.0292},
+        '70.0': {'fator_de_assimetria': 14.8137},
+        '80.0': {'fator_de_assimetria': 8.8882},
+        '100.0': {'fator_de_assimetria': 5.5518},
+        '200.0': {'fator_de_assimetria': 3.7045},
+        '400.0': {'fator_de_assimetria': 2.221},
+        '600.0': {'fator_de_assimetria': 1.3899},
+        '1000.0': {'fator_de_assimetria': 0.8891},
+
+    }
