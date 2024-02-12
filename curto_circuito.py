@@ -3,6 +3,7 @@
 # BIBLIOTECAS
 from funcionalidades import valores_base, obter_impedancia, corrente_curto_trifasica_simetrica, corrente_curto_monofasica
 from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador, impedancia_alimentadores, impedancia_barramento
+from funcionalidades import curto_assimétrico, impulso_da_corrente_de_curto_circuito, curto_bifasico
 from time import sleep
 
 # MAIN
@@ -31,7 +32,7 @@ while True:
 
     elif escolha == "4":
         impedancia_acumulada = impedancia_reduzida_positiva + impedancia_trafo_zero
-        mono = corrente_curto_monofasica(impedancia_acumulada, impedancia_reduzida_zero, impedancia_condutores_zero, impedancia_trafo_zero, corrente_base_primaria) # ICC MONO MÁX
+        mono = corrente_curto_monofasica(impedancia_acumulada, impedancia_reduzida_zero + impedancia_condutores_zero, impedancia_trafo_zero, corrente_base_primaria) # ICC MONO MÁX
         print(mono)
 
     elif escolha == "5":
@@ -53,15 +54,15 @@ while True:
     elif escolha == "8":
 
         impedancia_acumulada_2 = impedancia_reduzida_positiva + trafo_escolhido
-        mono_secundario = corrente_curto_monofasica(impedancia_acumulada_2, impedancia_reduzida_zero, impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
+        mono_secundario = corrente_curto_monofasica(impedancia_acumulada_2, impedancia_reduzida_zero + impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
         print(mono_secundario)
     
     elif escolha == "9":
 
         comprimento = float(input('Qual o comprimento do alimentador: '))
         cabos_paralelos = float(input('Digite quantos cabos por fase tem no circuito: '))
-        impedancia_alimentador = impedancia_alimentadores(comprimento, cabos_paralelos, potencia, tensao_secundaria_base)
-        print(impedancia_alimentador)
+        impedancia_alimentador_positiva,impedancia_alimentador_zero = impedancia_alimentadores(comprimento, cabos_paralelos, potencia, tensao_secundaria_base)
+        print(impedancia_alimentador_positiva)
     
     elif escolha == "10":
 
@@ -75,12 +76,12 @@ while True:
     
     elif escolha == "11": 
 
-        impedancia_qgf_positiva = impedancia_reduzida_positiva + trafo_escolhido + impedancia_alimentador + impedancia_barramento_modelado
+        impedancia_qgf_positiva = impedancia_reduzida_positiva + trafo_escolhido + impedancia_alimentador_positiva + impedancia_barramento_modelado
 
         print(impedancia_qgf_positiva)
 
         curto_simetrico_barramento = corrente_curto_trifasica_simetrica(impedancia_qgf_positiva, corrente_base_secundaria) # ICC TRIFÁSICO
-        curto_monofasico_barramento = corrente_curto_monofasica(impedancia_qgf_positiva, impedancia_reduzida_zero, impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
+        curto_monofasico_barramento = corrente_curto_monofasica(impedancia_qgf_positiva, impedancia_reduzida_zero + impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
         print(curto_simetrico_barramento)
         print(curto_monofasico_barramento)
     
@@ -89,9 +90,40 @@ while True:
         comprimento_circuito_QGF_CCM3 = float(input('Qual o comprimento do alimentador: '))
         cabos_paralelos_QGF_CCM3 = float(input('Digite quantos cabos por fase tem no circuito: '))
 
-        impedancia_circuito_QGF_CCM3 = impedancia_alimentadores(comprimento_circuito_QGF_CCM3, cabos_paralelos_QGF_CCM3, potencia, tensao_secundaria_base)
-        print(impedancia_circuito_QGF_CCM3)
+        impedancia_circuito_QGF_CCM3_positiva, impedancia_circuito_QGF_CCM3_zero = impedancia_alimentadores(comprimento_circuito_QGF_CCM3, cabos_paralelos_QGF_CCM3, potencia, tensao_secundaria_base)
+        print(impedancia_circuito_QGF_CCM3_positiva)
 
+        impedancia_acumulada_3 = impedancia_qgf_positiva + impedancia_circuito_QGF_CCM3_positiva
+    
+    elif escolha == "13":
+
+        curto_no_ccm = corrente_curto_trifasica_simetrica(impedancia_acumulada_3, corrente_base_secundaria) # ICC TRIFÁSICO
+        print(curto_no_ccm)
+    
+    elif escolha == "14":
+
+        real = impedancia_acumulada_3.real
+        imag = impedancia_acumulada_3.imag
+
+        curto_assimetrico = curto_assimétrico(real, imag, curto_no_ccm)
+        print(curto_assimetrico)
+    
+    elif escolha == "15":
+
+        impulso = impulso_da_corrente_de_curto_circuito(curto_assimetrico)
+        print(impulso)
+    
+    elif escolha == "16":
+
+        curto_bif = curto_bifasico(curto_assimetrico)
+        print(curto_bif)
+    
+    elif escolha == "17":
+
+        impedancia_acumulada_zero = impedancia_alimentador_zero + impedancia_circuito_QGF_CCM3_zero
+        mono_max = corrente_curto_monofasica(impedancia_acumulada_3, impedancia_acumulada_zero, impedancia_trafo_zero, corrente_base_secundaria) # ICC MONO MÁX
+        print(mono_max)
+        
     elif escolha == "0":
         break
     
