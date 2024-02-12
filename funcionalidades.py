@@ -27,6 +27,12 @@ def exibir_menu():
     print("9. Calcular impedância do alimentador")
     print("10. Calcular impedância do barramento")
     print("11. Curto simétrico e monofásico no barramento")
+    print("12. Impedância acumulada no CCM")
+    print("13. Curto no CCM")
+    print("14. Curto assimétrico")
+    print("15. Impulso da corrente de curto_circuito")
+    print("16. Curto bifásico")
+    print("17. Calculo  curto fase terra máximo")
     print("0. Sair")
     print('-'*60)
 
@@ -65,9 +71,9 @@ def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema, corrente_bas
     return magnitude, angulo_graus
 
 # CORRENTE DE CURTO-CIRCUITO FASE/TERRA
-def corrente_curto_monofasica(impedancia_reduzida,impedancia_zero, impedancia_condutores,impedancia_trafo,corrente_base):
+def corrente_curto_monofasica(impedancia_reduzida,impedancia_zero,impedancia_trafo,corrente_base):
     
-    curto_fase_terra = (3 * corrente_base)/((2 *(impedancia_reduzida))+ impedancia_zero + impedancia_condutores+impedancia_trafo)
+    curto_fase_terra = (3 * corrente_base)/((2 *(impedancia_reduzida))+ impedancia_zero +impedancia_trafo)
     magnitude, angulo_radiano = cmath.polar(curto_fase_terra)
     angulo_graus = math.degrees(angulo_radiano)
     return magnitude, angulo_graus
@@ -132,33 +138,80 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase, potencia, 
     #global potencia, tensao_base_secundaria
 
     dados_cabos = {
-        '1.5': {'resistencia_positiva': 14.8137, 'reatancia_positiva': 0.1378},
-        '2.5': {'resistencia_positiva': 8.8882, 'reatancia_positiva': 0.1345},
-        '4': {'resistencia_positiva': 5.5518, 'reatancia_positiva': 0.1279},
-        '6': {'resistencia_positiva': 3.7045, 'reatancia_positiva': 0.1225},
-        '10': {'resistencia_positiva': 2.221, 'reatancia_positiva': 0.1207},
-        '16': {'resistencia_positiva': 1.3899, 'reatancia_positiva': 0.1173},
-        '25': {'resistencia_positiva': 0.8891, 'reatancia_positiva': 0.1164},
-        '35': {'resistencia_positiva': 0.6353, 'reatancia_positiva': 0.1128},
-        '50': {'resistencia_positiva': 0.445, 'reatancia_positiva': 0.1127},
-        '70': {'resistencia_positiva': 0.3184, 'reatancia_positiva': 0.1096},
-        '95': {'resistencia_positiva': 0.2352, 'reatancia_positiva': 0.1090},
-        '120': {'resistencia_positiva': 0.1868, 'reatancia_positiva': 0.1076},
-        '150': {'resistencia_positiva': 0.1502, 'reatancia_positiva': 0.1076},
-        '185': {'resistencia_positiva': 0.1226, 'reatancia_positiva': 0.1073},
-        '240': {'resistencia_positiva': 0.0958, 'reatancia_positiva': 0.1070},
-        '300': {'resistencia_positiva': 0.0781, 'reatancia_positiva': 0.1068},
-        '400': {'resistencia_positiva': 0.0608, 'reatancia_positiva': 0.1058},
-        '500': {'resistencia_positiva': 0.0507, 'reatancia_positiva': 0.1051},
-        '630': {'resistencia_positiva': 0.0292, 'reatancia_positiva': 0.1042}
+        '1.5': {'resistencia_positiva': 14.8137, 'reatancia_positiva': 0.1378,'resistencia_zero': 16.6137, 'reatancia_zero': 2.9262}, 
+        '2.5': {'resistencia_positiva': 8.8882, 'reatancia_positiva': 0.1345,'resistencia_zero': 10.6882, 'reatancia_zero': 2.8755},
+        '4': {'resistencia_positiva': 5.5518, 'reatancia_positiva': 0.1279, 'resistencia_zero': 7.3552, 'reatancia_zero': 2.8349},
+        '6': {'resistencia_positiva': 3.7045, 'reatancia_positiva': 0.1225, 'resistencia_zero': 5.5035, 'reatancia_zero': 2.8},
+        '10': {'resistencia_positiva': 2.221, 'reatancia_positiva': 0.1207, 'resistencia_zero': 4.0222, 'reatancia_zero': 2.7639},
+        '16': {'resistencia_positiva': 1.3899, 'reatancia_positiva': 0.1173, 'resistencia_zero': 3.1890, 'reatancia_zero': 2.7173},
+        '25': {'resistencia_positiva': 0.8891, 'reatancia_positiva': 0.1164, 'resistencia_zero': 2.6891, 'reatancia_zero': 2.6692},
+        '35': {'resistencia_positiva': 0.6353, 'reatancia_positiva': 0.1128, 'resistencia_zero': 2.4355, 'reatancia_zero': 2.6382},
+        '50': {'resistencia_positiva': 0.445, 'reatancia_positiva': 0.1127, 'resistencia_zero': 2.2450, 'reatancia_zero': 2.5991},
+        '70': {'resistencia_positiva': 0.3184, 'reatancia_positiva': 0.1096, 'resistencia_zero': 2.1184, 'reatancia_zero': 2.5681},
+        '95': {'resistencia_positiva': 0.2352, 'reatancia_positiva': 0.1090, 'resistencia_zero': 2.0352, 'reatancia_zero': 2.5325},
+        '120': {'resistencia_positiva': 0.1868, 'reatancia_positiva': 0.1076, 'resistencia_zero': 1.9868, 'reatancia_zero': 2.5104},
+        '150': {'resistencia_positiva': 0.1502, 'reatancia_positiva': 0.1076, 'resistencia_zero': 1.9502, 'reatancia_zero': 2.4843},
+        '185': {'resistencia_positiva': 0.1226, 'reatancia_positiva': 0.1073, 'resistencia_zero': 1.9226, 'reatancia_zero': 2.4594},
+        '240': {'resistencia_positiva': 0.0958, 'reatancia_positiva': 0.1070, 'resistencia_zero': 1.8958, 'reatancia_zero': 2.4312},
+        '300': {'resistencia_positiva': 0.0781, 'reatancia_positiva': 0.1068, 'resistencia_zero': 1.8781, 'reatancia_zero': 2.4067},
+        '400': {'resistencia_positiva': 0.0608, 'reatancia_positiva': 0.1058, 'resistencia_zero': 1.8608, 'reatancia_zero': 2.3757},
+        '500': {'resistencia_positiva': 0.0507, 'reatancia_positiva': 0.1051, 'resistencia_zero': 1.8550, 'reatancia_zero': 2.3491},
+        '630': {'resistencia_positiva': 0.0292, 'reatancia_positiva': 0.1042, 'resistencia_zero': 1.8376, 'reatancia_zero': 2.3001}
     }
 
     secao_cabo = input('Digite a seção nominal do cabo: ')
     
     if secao_cabo in dados_cabos:
         dados = dados_cabos[secao_cabo]
-        resistencia_do_circuito = (dados['resistencia_positiva'] * comprimento_alimentador) / (1000 * cabos_por_fase)
-        reatancia_do_circuito = (dados['reatancia_positiva'] * comprimento_alimentador) / (1000 * cabos_por_fase)
+
+        resistencia_do_circuito_positiva = (dados['resistencia_positiva'] * comprimento_alimentador) / (1000 * cabos_por_fase)
+        reatancia_do_circuito_positiva = (dados['reatancia_positiva'] * comprimento_alimentador) / (1000 * cabos_por_fase)
+        resistencia_do_circuito_zero = (dados['resistencia_zero'] * comprimento_alimentador) / (1000 * cabos_por_fase)
+        reatancia_do_circuito_zero = (dados['reatancia_zero'] * comprimento_alimentador) / (1000 * cabos_por_fase)
+
+        resistencia_circuito_base_nova_positiva = (resistencia_do_circuito_positiva * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
+        reatancia_circuito_base_nova_positiva = (reatancia_do_circuito_positiva * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
+        resistencia_circuito_base_nova_zero = (resistencia_do_circuito_zero * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
+        reatancia_circuito_base_nova_zero = (reatancia_do_circuito_zero * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
+
+        impedancia_circuito_positiva = complex(resistencia_circuito_base_nova_positiva, reatancia_circuito_base_nova_positiva)
+        impedancia_circuito_zero = complex(resistencia_circuito_base_nova_zero, reatancia_circuito_base_nova_zero)
+
+        return impedancia_circuito_positiva, impedancia_circuito_zero
+    else:
+        print('Opção de cabo inválida')
+'''
+def impedancia_alimentadores_zero(comprimento_alimentador, cabos_por_fase, potencia, tensao_base_secundaria):
+    #global potencia, tensao_base_secundaria
+
+    dados_cabos = {
+        '1.5': {'resistencia_zero': 16.6137, 'reatancia_zero': 2.9262}, 
+        '2.5': {'resistencia_zero': 10.6882, 'reatancia_zero': 2.8755},
+        '4': {'resistencia_zero': 7.3552, 'reatancia_zero': 2.8349},
+        '6': {'resistencia_zero': 5.5035, 'reatancia_zero': 2.8},
+        '10': {'resistencia_zero': 4.0222, 'reatancia_zero': 2.7639},
+        '16': {'resistencia_zero': 3.1890, 'reatancia_zero': 2.7173},
+        '25': {'resistencia_zero': 2.6891, 'reatancia_zero': 2.6692},
+        '35': {'resistencia_zero': 2.4355, 'reatancia_zero': 2.6382},
+        '50': {'resistencia_zero': 2.2450, 'reatancia_zero': 2.5991},
+        '70': {'resistencia_zero': 2.1184, 'reatancia_zero': 2.5681},
+        '95': {'resistencia_zero': 2.0352, 'reatancia_zero': 2.5325},
+        '120': {'resistencia_zero': 1.9868, 'reatancia_zero': 2.5104},
+        '150': {'resistencia_zero': 1.9502, 'reatancia_zero': 2.4843},
+        '185': {'resistencia_zero': 1.9226, 'reatancia_zero': 2.4594},
+        '240': {'resistencia_zero': 1.8958, 'reatancia_zero': 2.4312},
+        '300': {'resistencia_zero': 1.8781, 'reatancia_zero': 2.4067},
+        '400': {'resistencia_zero': 1.8608, 'reatancia_zero': 2.3757},
+        '500': {'resistencia_zero': 1.8550, 'reatancia_zero': 2.3491},
+        '630': {'resistencia_zero': 1.8376, 'reatancia_zero': 2.3001}
+    }
+
+    secao_cabo = input('Digite a seção nominal do cabo: ')
+    
+    if secao_cabo in dados_cabos:
+        dados = dados_cabos[secao_cabo]
+        resistencia_do_circuito = (dados['resistencia_zero'] * comprimento_alimentador) / (1000 * cabos_por_fase)
+        reatancia_do_circuito = (dados['reatancia_zero'] * comprimento_alimentador) / (1000 * cabos_por_fase)
 
         resistencia_circuito_base_nova = (resistencia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
         reatancia_circuito_base_nova = (reatancia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
@@ -166,7 +219,7 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase, potencia, 
 
         return impedancia_circuito
     else:
-        print('Opção de cabo inválida')
+        print('Opção de cabo inválida')'''
 
 def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase, potencia, tensao_base_secundaria):
     #global potencia, tensao_base_secundaria
@@ -207,11 +260,12 @@ def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase, po
     else:
         print('Combinação de largura, espessura e seção do barramento inválida')
 
-def curto_assimétrico(resistencia_total, reatancia_total):
+def curto_assimétrico(resistencia_total, reatancia_total, curto_simetrico_tri):
 
-    a = reatancia_total/resistencia_total
+    a = round(reatancia_total/resistencia_total,1)
 
-    dados_cabos = {
+    relacao_X_R = {
+
         '0.4': {'fator_de_assimetria': 1.0},
         '0.6': {'fator_de_assimetria': 1.0},
         '0.8': {'fator_de_assimetria': 1.02},
@@ -226,42 +280,73 @@ def curto_assimétrico(resistencia_total, reatancia_total):
         '2.6': {'fator_de_assimetria': 1.26},
         '2.8': {'fator_de_assimetria': 1.28},
         '3.0': {'fator_de_assimetria': 1.30},
-        '3.2': {'fator_de_assimetria': 0.0958},
-        '3.4': {'fator_de_assimetria': 0.0781},
-        '3.6': {'fator_de_assimetria': 0.0608},
-        '3.8': {'fator_de_assimetria': 0.0507},
-        '4.0': {'fator_de_assimetria': 0.0292},
-        '4.2': {'fator_de_assimetria': 14.8137},
-        '4.4': {'fator_de_assimetria': 8.8882},
-        '4.6': {'fator_de_assimetria': 5.5518},
-        '4.8': {'fator_de_assimetria': 3.7045},
-        '5.0': {'fator_de_assimetria': 2.221},
-        '5.5': {'fator_de_assimetria': 1.3899},
-        '6.0': {'fator_de_assimetria': 0.8891},
-        '6.5': {'fator_de_assimetria': 0.6353},
-        '7.0': {'fator_de_assimetria': 0.445},
-        '7.5': {'fator_de_assimetria': 0.3184},
-        '8.0': {'fator_de_assimetria': 0.2352},
-        '8.5': {'fator_de_assimetria': 0.1868},
-        '9.0': {'fator_de_assimetria': 0.1502},
-        '9.5': {'fator_de_assimetria': 0.1226},
-        '10.0': {'fator_de_assimetria': 0.0958},
-        '11.0': {'fator_de_assimetria': 0.0781},
-        '12.0': {'fator_de_assimetria': 0.0608},
-        '13.0': {'fator_de_assimetria': 0.0507},
-        '14.0': {'fator_de_assimetria': 0.0292},
-        '15.0': {'fator_de_assimetria': 0.1226},
-        '20.0': {'fator_de_assimetria': 0.0958},
-        '30.0': {'fator_de_assimetria': 0.0781},
-        '40.0': {'fator_de_assimetria': 0.0608},
-        '50.0': {'fator_de_assimetria': 0.0507},
-        '60.0': {'fator_de_assimetria': 0.0292},
-        '70.0': {'fator_de_assimetria': 14.8137},
-        '80.0': {'fator_de_assimetria': 8.8882},
-        '100.0': {'fator_de_assimetria': 5.5518},
-        '200.0': {'fator_de_assimetria': 3.7045},
-        '400.0': {'fator_de_assimetria': 2.221},
-        '600.0': {'fator_de_assimetria': 1.3899},
-        '1000.0': {'fator_de_assimetria': 0.8891},
+        '3.2': {'fator_de_assimetria': 1.32},
+        '3.4': {'fator_de_assimetria': 1.34},
+        '3.6': {'fator_de_assimetria': 1.35},
+        '3.8': {'fator_de_assimetria': 1.37},
+        '4.0': {'fator_de_assimetria': 1.38},
+        '4.2': {'fator_de_assimetria': 1.39},
+        '4.4': {'fator_de_assimetria': 1.40},
+        '4.6': {'fator_de_assimetria': 1.41},
+        '4.8': {'fator_de_assimetria': 1.42},
+        '5.0': {'fator_de_assimetria': 1.43},
+        '5.5': {'fator_de_assimetria': 1.46},
+        '6.0': {'fator_de_assimetria': 1.47},
+        '6.5': {'fator_de_assimetria': 1.49},
+        '7.0': {'fator_de_assimetria': 1.51},
+        '7.5': {'fator_de_assimetria': 1.52},
+        '8.0': {'fator_de_assimetria': 1.53},
+        '8.5': {'fator_de_assimetria': 1.54},
+        '9.0': {'fator_de_assimetria': 1.55},
+        '9.5': {'fator_de_assimetria': 1.56},
+        '10.0': {'fator_de_assimetria': 1.57},
+        '11.0': {'fator_de_assimetria': 1.58},
+        '12.0': {'fator_de_assimetria': 1.59},
+        '13.0': {'fator_de_assimetria': 1.60},
+        '14.0': {'fator_de_assimetria': 1.61},
+        '15.0': {'fator_de_assimetria': 1.62},
+        '20.0': {'fator_de_assimetria': 1.64},
+        '30.0': {'fator_de_assimetria': 1.67},
+        '40.0': {'fator_de_assimetria': 1.68},
+        '50.0': {'fator_de_assimetria': 1.69},
+        '60.0': {'fator_de_assimetria': 1.70},
+        '70.0': {'fator_de_assimetria': 1.71},
+        '80.0': {'fator_de_assimetria': 1.71},
+        '100.0': {'fator_de_assimetria': 1.71},
+        '200.0': {'fator_de_assimetria': 1.72},
+        '400.0': {'fator_de_assimetria': 1.72},
+        '600.0': {'fator_de_assimetria': 1.73},
+        '1000.0': {'fator_de_assimetria': 1.73}
+
+        # ADICIONAR CONFORME NECESSÁRIO
 
     }
+
+    chave_mais_proxima = None
+    minima_diferenca = float('inf')  # Inicializa a diferença mínima como infinito
+
+    for chave in relacao_X_R.keys():
+        diferenca_atual = float(chave) - a
+        if diferenca_atual >= 0 and diferenca_atual < minima_diferenca:
+            minima_diferenca = diferenca_atual
+            chave_mais_proxima = chave
+
+    if chave_mais_proxima is not None:
+        real, ang = curto_simetrico_tri
+        curto_assimetrico = relacao_X_R[chave_mais_proxima]['fator_de_assimetria'] * real
+    else:
+        # Tratar caso especial se nenhuma chave adequada for encontrada
+        print("Nenhuma chave adequada encontrada no dicionário para o valor arredondado de 'a'")
+    
+    return curto_assimetrico
+
+def impulso_da_corrente_de_curto_circuito(curto_assim): 
+    
+    impulso = curto_assim*math.sqrt(2)
+
+    return impulso
+
+def curto_bifasico(curto_assimetrico_trifasico):
+
+    curto_bif = curto_assimetrico_trifasico*(math.sqrt(3)/2)
+    return curto_bif
