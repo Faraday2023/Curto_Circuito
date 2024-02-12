@@ -3,7 +3,8 @@
 # BIBLIOTECAS
 from funcionalidades import valores_base, obter_impedancia, corrente_curto_trifasica_simetrica, corrente_curto_monofasica
 from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador, impedancia_alimentadores, impedancia_barramento
-from funcionalidades import curto_assimétrico, impulso_da_corrente_de_curto_circuito, curto_bifasico
+from funcionalidades import curto_assimétrico, impulso_da_corrente_de_curto_circuito, curto_bifasico, corrente_curto_monofasica_minima
+from funcionalidades import conversao_fisico_pu, mudanca_base
 from time import sleep
 
 # MAIN
@@ -14,7 +15,7 @@ while True:
     sleep(1)
 
     if escolha == "1":
-        corrente_base_primaria,corrente_base_secundaria,tensao_primaria_base,tensao_secundaria_base, potencia = valores_base() # VALORES BASE DO SISTEMA
+        corrente_base_primaria,corrente_base_secundaria,tensao_primaria_base,tensao_secundaria_base, potencia, impedancia_base_primaria, impedancia_base_secundaria = valores_base() # VALORES BASE DO SISTEMA
         print(corrente_base_primaria,corrente_base_secundaria, tensao_primaria_base, tensao_secundaria_base, potencia)
 
     elif escolha == "2":
@@ -121,8 +122,21 @@ while True:
     elif escolha == "17":
 
         impedancia_acumulada_zero = impedancia_alimentador_zero + impedancia_circuito_QGF_CCM3_zero
-        mono_max = corrente_curto_monofasica(impedancia_acumulada_3, impedancia_acumulada_zero, impedancia_trafo_zero, corrente_base_secundaria) # ICC MONO MÁX
+        mono_max = corrente_curto_monofasica(impedancia_acumulada_3, impedancia_acumulada_zero, trafo_escolhido, corrente_base_secundaria) # ICC MONO MÁX
         print(mono_max)
+    
+    elif escolha == "18":
+
+        re_contato = int(input('Digite a resistência de contato: '))
+        re_contato_pu = conversao_fisico_pu(re_contato, impedancia_base_secundaria)
+        re_malha = int(input('Digite a resistencia da malha de aterramento: '))
+        re_malha_pu = conversao_fisico_pu(re_malha, impedancia_base_secundaria)
+        re_resistor = int(input('Digite o valor do resistor de aterramento: '))
+        re_resistor_pu = conversao_fisico_pu(re_resistor, impedancia_base_secundaria)
+
+        curto_minimo = corrente_curto_monofasica_minima(impedancia_acumulada_3, impedancia_acumulada_zero, impedancia_trafo_zero, corrente_base_secundaria, re_contato_pu, re_malha_pu, re_resistor_pu)
+        print(impedancia_acumulada_3, impedancia_acumulada_zero, trafo_escolhido, re_contato_pu, re_malha_pu, re_resistor_pu)
+        print(curto_minimo)
         
     elif escolha == "0":
         break
