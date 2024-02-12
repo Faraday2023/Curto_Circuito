@@ -33,6 +33,7 @@ def exibir_menu():
     print("15. Impulso da corrente de curto_circuito")
     print("16. Curto bifásico")
     print("17. Calculo  curto fase terra máximo")
+    print("18. Curto fase terra mínimo")
     print("0. Sair")
     print('-'*60)
 
@@ -52,12 +53,26 @@ def valores_base():
     try:
         corrente_base_primaria = potencia / (tensao_base_primaria * math.sqrt(3))
         corrente_base_secundaria = potencia / (tensao_base_secundaria * math.sqrt(3))
-        
+        impedancia_base_primaria = (tensao_base_primaria**2)/potencia
+        impedancia_base_secundaria = (tensao_base_secundaria**2)/potencia
+
     except ZeroDivisionError:
         print("Erro: A tensão base não pode ser zero.")
         return None
     
-    return (round(corrente_base_primaria, 2)),(round(corrente_base_secundaria, 2)),tensao_base_primaria, tensao_base_secundaria, potencia
+    return (round(corrente_base_primaria, 2)),(round(corrente_base_secundaria, 2)),tensao_base_primaria, tensao_base_secundaria, potencia, impedancia_base_primaria, impedancia_base_secundaria
+
+def conversao_fisico_pu(valor_fisico, valor_base):
+
+    valor_pu = valor_fisico/valor_base
+
+    return valor_pu
+
+def mudanca_base(valor_antigo, potencia_nova, potencia_antiga, tensao_antiga, tensao_nova ):
+
+    valor_novo = valor_antigo* (potencia_nova/potencia_antiga)*(tensao_antiga/tensao_nova)**2
+
+    return valor_novo
 
 # CORRENTE DE CURTO TRIFÁSICA SIMÉTRICA 
 def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema, corrente_base):
@@ -180,46 +195,6 @@ def impedancia_alimentadores(comprimento_alimentador, cabos_por_fase, potencia, 
         return impedancia_circuito_positiva, impedancia_circuito_zero
     else:
         print('Opção de cabo inválida')
-'''
-def impedancia_alimentadores_zero(comprimento_alimentador, cabos_por_fase, potencia, tensao_base_secundaria):
-    #global potencia, tensao_base_secundaria
-
-    dados_cabos = {
-        '1.5': {'resistencia_zero': 16.6137, 'reatancia_zero': 2.9262}, 
-        '2.5': {'resistencia_zero': 10.6882, 'reatancia_zero': 2.8755},
-        '4': {'resistencia_zero': 7.3552, 'reatancia_zero': 2.8349},
-        '6': {'resistencia_zero': 5.5035, 'reatancia_zero': 2.8},
-        '10': {'resistencia_zero': 4.0222, 'reatancia_zero': 2.7639},
-        '16': {'resistencia_zero': 3.1890, 'reatancia_zero': 2.7173},
-        '25': {'resistencia_zero': 2.6891, 'reatancia_zero': 2.6692},
-        '35': {'resistencia_zero': 2.4355, 'reatancia_zero': 2.6382},
-        '50': {'resistencia_zero': 2.2450, 'reatancia_zero': 2.5991},
-        '70': {'resistencia_zero': 2.1184, 'reatancia_zero': 2.5681},
-        '95': {'resistencia_zero': 2.0352, 'reatancia_zero': 2.5325},
-        '120': {'resistencia_zero': 1.9868, 'reatancia_zero': 2.5104},
-        '150': {'resistencia_zero': 1.9502, 'reatancia_zero': 2.4843},
-        '185': {'resistencia_zero': 1.9226, 'reatancia_zero': 2.4594},
-        '240': {'resistencia_zero': 1.8958, 'reatancia_zero': 2.4312},
-        '300': {'resistencia_zero': 1.8781, 'reatancia_zero': 2.4067},
-        '400': {'resistencia_zero': 1.8608, 'reatancia_zero': 2.3757},
-        '500': {'resistencia_zero': 1.8550, 'reatancia_zero': 2.3491},
-        '630': {'resistencia_zero': 1.8376, 'reatancia_zero': 2.3001}
-    }
-
-    secao_cabo = input('Digite a seção nominal do cabo: ')
-    
-    if secao_cabo in dados_cabos:
-        dados = dados_cabos[secao_cabo]
-        resistencia_do_circuito = (dados['resistencia_zero'] * comprimento_alimentador) / (1000 * cabos_por_fase)
-        reatancia_do_circuito = (dados['reatancia_zero'] * comprimento_alimentador) / (1000 * cabos_por_fase)
-
-        resistencia_circuito_base_nova = (resistencia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
-        reatancia_circuito_base_nova = (reatancia_do_circuito * 1000) * (potencia / (1000 * (tensao_base_secundaria ** 2)))
-        impedancia_circuito = complex(resistencia_circuito_base_nova, reatancia_circuito_base_nova)
-
-        return impedancia_circuito
-    else:
-        print('Opção de cabo inválida')'''
 
 def impedancia_barramento(largura, espessura,comprimento_bar, barra_por_fase, potencia, tensao_base_secundaria):
     #global potencia, tensao_base_secundaria
@@ -350,3 +325,10 @@ def curto_bifasico(curto_assimetrico_trifasico):
 
     curto_bif = curto_assimetrico_trifasico*(math.sqrt(3)/2)
     return curto_bif
+
+def corrente_curto_monofasica_minima(impedancia_reduzida,impedancia_zero,impedancia_trafo,corrente_base, r_contato, r_malha, r_resistor):
+    
+    curto_fase_terra_minimo = (3 * corrente_base)/((2 *(impedancia_reduzida))+ impedancia_zero + impedancia_trafo + 3*(r_contato + r_malha + r_resistor))
+    magnitude, angulo_radiano = cmath.polar(curto_fase_terra_minimo)
+    angulo_graus = math.degrees(angulo_radiano)
+    return magnitude, angulo_graus
