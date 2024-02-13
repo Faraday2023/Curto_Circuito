@@ -1,15 +1,7 @@
 # FUNCIONALIDADES
 
-import math
-import numpy
-import cmath
-
-# VARIÁVEIS GLOBAIS
-''''
-corrente_base_primaria = None
-tensao_base_primaria = 13800
-tensao_base_secundaria = 380
-potencia = 100000000'''
+import math, numpy, cmath
+from validacao import validar_valor_float
 
 # FUNÇÃO DE MENU
 def exibir_menu():
@@ -38,14 +30,36 @@ def exibir_menu():
     print('-'*60)
 
 # FUNÇÃO PARA DETERMINAÇÃO DE IMPEDÂNCIAS
+    
 def obter_impedancia():
-    parte_real = float(input('Digite a parte real da impedância: '))
-    parte_imaginaria = float(input('Digite a parte imaginária da impedância: '))
-    return complex(parte_real, parte_imaginaria)
+    while True:
+        try:
+            parte_real = input('Digite a parte real da impedância: ').strip()
+            parte_real = validar_valor_float(parte_real)
+            
+            while True:
+                try:
+                    parte_imaginaria = input('Digite a parte imaginária da impedância: ').strip()
+                    parte_imaginaria = validar_valor_float(parte_imaginaria)
+                    
+                    if parte_imaginaria == 0:
+                        print("Erro: A parte imaginária da impedância não pode ser zero. Por favor, insira um valor diferente.")
+                    else:
+                        break  # Sai do loop interno se a parte imaginária for diferente de zero
+                except ValueError as ve:
+                    print(f"{ve}")
+            
+            return complex(parte_real, parte_imaginaria)
+        
+        except KeyboardInterrupt:
+            print("\nOperação interrompida pelo usuário.")
+            raise
+        except ValueError as ve:
+            print(f"Erro: {ve}")
 
-# CORRENTE BASE
+# FUNÇÃO PARA DETERMINAÇÃO DOS BASE
 def valores_base():
-    #global potencia, tensao_base_primaria, corrente_base_primaria
+    
     potencia = int(input('Defina a potência base: '))
     tensao_base_primaria = int(input('Defina a tensão base primaria: '))
     tensao_base_secundaria = int(input('Defina a tensão base secundaria: '))
@@ -241,57 +255,23 @@ def curto_assimétrico(resistencia_total, reatancia_total, curto_simetrico_tri):
 
     relacao_X_R = {
 
-        '0.4': {'fator_de_assimetria': 1.0},
-        '0.6': {'fator_de_assimetria': 1.0},
-        '0.8': {'fator_de_assimetria': 1.02},
-        '1.0': {'fator_de_assimetria': 1.04},
-        '1.2': {'fator_de_assimetria': 1.07},
-        '1.4': {'fator_de_assimetria': 1.10},
-        '1.6': {'fator_de_assimetria': 1.13},
-        '1.8': {'fator_de_assimetria': 1.16},
-        '2.0': {'fator_de_assimetria': 1.19},
-        '2.2': {'fator_de_assimetria': 1.21},
-        '2.4': {'fator_de_assimetria': 1.24},
-        '2.6': {'fator_de_assimetria': 1.26},
-        '2.8': {'fator_de_assimetria': 1.28},
-        '3.0': {'fator_de_assimetria': 1.30},
-        '3.2': {'fator_de_assimetria': 1.32},
-        '3.4': {'fator_de_assimetria': 1.34},
-        '3.6': {'fator_de_assimetria': 1.35},
-        '3.8': {'fator_de_assimetria': 1.37},
-        '4.0': {'fator_de_assimetria': 1.38},
-        '4.2': {'fator_de_assimetria': 1.39},
-        '4.4': {'fator_de_assimetria': 1.40},
-        '4.6': {'fator_de_assimetria': 1.41},
-        '4.8': {'fator_de_assimetria': 1.42},
-        '5.0': {'fator_de_assimetria': 1.43},
-        '5.5': {'fator_de_assimetria': 1.46},
-        '6.0': {'fator_de_assimetria': 1.47},
-        '6.5': {'fator_de_assimetria': 1.49},
-        '7.0': {'fator_de_assimetria': 1.51},
-        '7.5': {'fator_de_assimetria': 1.52},
-        '8.0': {'fator_de_assimetria': 1.53},
-        '8.5': {'fator_de_assimetria': 1.54},
-        '9.0': {'fator_de_assimetria': 1.55},
-        '9.5': {'fator_de_assimetria': 1.56},
-        '10.0': {'fator_de_assimetria': 1.57},
-        '11.0': {'fator_de_assimetria': 1.58},
-        '12.0': {'fator_de_assimetria': 1.59},
-        '13.0': {'fator_de_assimetria': 1.60},
-        '14.0': {'fator_de_assimetria': 1.61},
-        '15.0': {'fator_de_assimetria': 1.62},
-        '20.0': {'fator_de_assimetria': 1.64},
-        '30.0': {'fator_de_assimetria': 1.67},
-        '40.0': {'fator_de_assimetria': 1.68},
-        '50.0': {'fator_de_assimetria': 1.69},
-        '60.0': {'fator_de_assimetria': 1.70},
-        '70.0': {'fator_de_assimetria': 1.71},
-        '80.0': {'fator_de_assimetria': 1.71},
-        '100.0': {'fator_de_assimetria': 1.71},
-        '200.0': {'fator_de_assimetria': 1.72},
-        '400.0': {'fator_de_assimetria': 1.72},
-        '600.0': {'fator_de_assimetria': 1.73},
-        '1000.0': {'fator_de_assimetria': 1.73}
+        '0.4': {'fator_de_assimetria': 1.0}, '0.6': {'fator_de_assimetria': 1.0}, '0.8': {'fator_de_assimetria': 1.02},
+        '1.0': {'fator_de_assimetria': 1.04}, '1.2': {'fator_de_assimetria': 1.07}, '1.4': {'fator_de_assimetria': 1.10},
+        '1.6': {'fator_de_assimetria': 1.13}, '1.8': {'fator_de_assimetria': 1.16}, '2.0': {'fator_de_assimetria': 1.19},
+        '2.2': {'fator_de_assimetria': 1.21}, '2.4': {'fator_de_assimetria': 1.24}, '2.6': {'fator_de_assimetria': 1.26},
+        '2.8': {'fator_de_assimetria': 1.28}, '3.0': {'fator_de_assimetria': 1.30}, '3.2': {'fator_de_assimetria': 1.32},
+        '3.4': {'fator_de_assimetria': 1.34}, '3.6': {'fator_de_assimetria': 1.35}, '3.8': {'fator_de_assimetria': 1.37},
+        '4.0': {'fator_de_assimetria': 1.38}, '4.2': {'fator_de_assimetria': 1.39}, '4.4': {'fator_de_assimetria': 1.40},
+        '4.6': {'fator_de_assimetria': 1.41}, '4.8': {'fator_de_assimetria': 1.42}, '5.0': {'fator_de_assimetria': 1.43},
+        '5.5': {'fator_de_assimetria': 1.46}, '6.0': {'fator_de_assimetria': 1.47}, '6.5': {'fator_de_assimetria': 1.49},
+        '7.0': {'fator_de_assimetria': 1.51}, '7.5': {'fator_de_assimetria': 1.52}, '8.0': {'fator_de_assimetria': 1.53},
+        '8.5': {'fator_de_assimetria': 1.54}, '9.0': {'fator_de_assimetria': 1.55}, '9.5': {'fator_de_assimetria': 1.56},
+        '10.0': {'fator_de_assimetria': 1.57},'11.0': {'fator_de_assimetria': 1.58}, '12.0': {'fator_de_assimetria': 1.59},
+        '13.0': {'fator_de_assimetria': 1.60},'14.0': {'fator_de_assimetria': 1.61},'15.0': {'fator_de_assimetria': 1.62},
+        '20.0': {'fator_de_assimetria': 1.64},'30.0': {'fator_de_assimetria': 1.67},'40.0': {'fator_de_assimetria': 1.68},
+        '50.0': {'fator_de_assimetria': 1.69},'60.0': {'fator_de_assimetria': 1.70},'70.0': {'fator_de_assimetria': 1.71},
+        '80.0': {'fator_de_assimetria': 1.71},'100.0': {'fator_de_assimetria': 1.71},'200.0': {'fator_de_assimetria': 1.72},
+        '400.0': {'fator_de_assimetria': 1.72},'600.0': {'fator_de_assimetria': 1.73},'1000.0': {'fator_de_assimetria': 1.73}
 
         # ADICIONAR CONFORME NECESSÁRIO
 
