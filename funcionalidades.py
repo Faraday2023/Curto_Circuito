@@ -1,13 +1,13 @@
 # FUNCIONALIDADES
 
 import math, numpy, cmath
-from validacao import validar_valor_float
+from validacao import validar_valor_float, validar_valor_inteiro, verificar_argumentos_explicitos
 
 # FUNÇÃO DE MENU
 def exibir_menu():
-    print('-'*60)
+    print('-'*100)
     print("Escolha uma opção:")
-    print('-'*60)
+    print('-'*100)
     print("1. Calcular corrente base")
     print("2. Cadastrar impedâncias")
     print("3. Calcular Curto-Circuito-Trifásico-Simétrico")
@@ -27,7 +27,7 @@ def exibir_menu():
     print("17. Calculo  curto fase terra máximo")
     print("18. Curto fase terra mínimo")
     print("0. Sair")
-    print('-'*60)
+    print('-'*100)
 
 # FUNÇÃO PARA DETERMINAÇÃO DE IMPEDÂNCIAS
     
@@ -59,40 +59,88 @@ def obter_impedancia():
 
 # FUNÇÃO PARA DETERMINAÇÃO DOS BASE
 def valores_base():
-    
-    potencia = int(input('Defina a potência base: '))
-    tensao_base_primaria = int(input('Defina a tensão base primaria: '))
-    tensao_base_secundaria = int(input('Defina a tensão base secundaria: '))
-
     try:
-        corrente_base_primaria = potencia / (tensao_base_primaria * math.sqrt(3))
-        corrente_base_secundaria = potencia / (tensao_base_secundaria * math.sqrt(3))
-        impedancia_base_primaria = (tensao_base_primaria**2)/potencia
-        impedancia_base_secundaria = (tensao_base_secundaria**2)/potencia
+        while True:
+            # Solicita ao usuário que insira a potência base
+            potencia = input('Defina a potência base (em números inteiros): ').strip()
+            # Valida a entrada da potência base
+            potencia = validar_valor_inteiro(potencia)
+            
+            # Solicita ao usuário que insira a tensão base primária
+            tensao_base_primaria = input('Defina a tensão base primária (em números inteiros): ').strip()
+            # Valida a entrada da tensão base primária
+            tensao_base_primaria = validar_valor_float(tensao_base_primaria)
+            
+            # Solicita ao usuário que insira a tensão base secundária
+            tensao_base_secundaria = input('Defina a tensão base secundária (em números inteiros): ').strip()
+            # Valida a entrada da tensão base secundária
+            tensao_base_secundaria = validar_valor_inteiro(tensao_base_secundaria)
 
-    except ZeroDivisionError:
-        print("Erro: A tensão base não pode ser zero.")
-        return None
+            try:
+                corrente_base_primaria = potencia / (tensao_base_primaria * math.sqrt(3))
+                corrente_base_secundaria = potencia / (tensao_base_secundaria * math.sqrt(3))
+                impedancia_base_primaria = (tensao_base_primaria**2) / potencia
+                impedancia_base_secundaria = (tensao_base_secundaria**2) / potencia
+
+            except ZeroDivisionError:
+                print("Erro: A tensão base não pode ser zero.")
+                return None
+
+            return round(corrente_base_primaria, 2), round(corrente_base_secundaria, 2), tensao_base_primaria, tensao_base_secundaria, potencia, impedancia_base_primaria, impedancia_base_secundaria
     
-    return (round(corrente_base_primaria, 2)),(round(corrente_base_secundaria, 2)),tensao_base_primaria, tensao_base_secundaria, potencia, impedancia_base_primaria, impedancia_base_secundaria
+    except KeyboardInterrupt:
+        print("\nPrograma encerrado pelo usuário.")
+        return None
 
-def conversao_fisico_pu(valor_fisico, valor_base):
+def conversao_fisico_pu(valor_fisico = None, valor_base = None):
 
-    valor_pu = valor_fisico/valor_base
+    argumentos = [(valor_fisico, "valor_fisico"), (valor_base, "valor_base")]
+
+    # Verificar se todos os argumentos foram fornecidos
+    for arg, nome in argumentos:
+        if not verificar_argumentos_explicitos(arg, nome, 1): # Passo aqui precisa ser definido ainda
+            return None
+
+    valor_fisico = validar_valor_float(valor_fisico)
+    valor_base = validar_valor_float(valor_base)
+
+    if valor_fisico is not None and valor_base is not None:
+        valor_pu = valor_fisico / valor_base
+        return valor_pu
+    else:
+        print("Não foi possível calcular o valor por unidade (PU). Por favor defina o valor_fisico e o valor_base primeiro")
 
     return valor_pu
 
-def mudanca_base(valor_antigo, potencia_nova, potencia_antiga, tensao_antiga, tensao_nova ):
+def mudanca_base(valor_antigo = None, potencia_nova = None, potencia_antiga = None, tensao_antiga = None, tensao_nova = None ):
 
-    valor_novo = valor_antigo* (potencia_nova/potencia_antiga)*(tensao_antiga/tensao_nova)**2
+    argumentos = [(valor_antigo, "valor_antigo"), (potencia_nova, "potencia_nova"), (potencia_antiga, "potencia_antiga"), (tensao_antiga, "tensao_antiga"), (tensao_nova, "tensao_nova")]
+
+    # Verificar se todos os argumentos foram fornecidos
+    for arg, nome in argumentos:
+        if not verificar_argumentos_explicitos(arg, nome, 1): # Passo aqui precisa ser definido ainda
+            return None
+
+    valor_antigo = validar_valor_float(valor_antigo)
+    potencia_nova = validar_valor_float(potencia_nova)
+    potencia_antiga = validar_valor_float(potencia_antiga)
+    tensao_antiga = validar_valor_float(tensao_antiga)
+    tensao_nova = validar_valor_float(tensao_nova)
+
+    valor_novo = valor_antigo*(potencia_nova/potencia_antiga)*(tensao_antiga/tensao_nova)**2
 
     return valor_novo
 
 # CORRENTE DE CURTO TRIFÁSICA SIMÉTRICA 
-def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema, corrente_base):
 
-    if corrente_base is None:
-        return None  # Lidar com a situação de erro na corrente base
+def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema = None, corrente_base = None):
+
+    argumentos = [(impedancia_reduzida_sistema, "impedancia_reduzida_sistema"), (corrente_base, "corrente_base")]
+
+    # Verificar se todos os argumentos foram fornecidos
+    for arg, nome in argumentos:
+        if not verificar_argumentos_explicitos(arg, nome, 1): # Passo aqui precisa ser definido ainda
+            return None
     
     curto_trifasico_simetrico = (1/(impedancia_reduzida_sistema)) * corrente_base
     magnitude, angulo_radiano = cmath.polar(curto_trifasico_simetrico)
@@ -117,7 +165,7 @@ def potencia_de_curto_circuito(tensao_base_primaria, corrente_base_primaria):
 
 # MODELANDO TRANSFORMADOR
 def tipo_transformador(tensao_base_primaria,tensao_base_secundaria, potencia):
-    print('*' * 50)
+    print('-' * 100)
     selecao = str(input('1) Dados obtidos por ensaio\n2) Dados obtidos por tabela\n'))
 
     if selecao == '1':
@@ -137,7 +185,7 @@ def tipo_transformador(tensao_base_primaria,tensao_base_secundaria, potencia):
             print('Opção inválida.')
 
     elif selecao == '2':
-        print('*' * 50)
+        print('-' * 100)
         pot_trafo = str(input('Digite a potência do transformador em kVA: '))
         #tensao_base_primaria = str(input('Digite a tensão nominal primária: '))
         impedancia_de_placa = str(input('Digite a impedância percentual de placa do transformador: '))
@@ -312,3 +360,11 @@ def corrente_curto_monofasica_minima(impedancia_reduzida,impedancia_zero,impedan
     magnitude, angulo_radiano = cmath.polar(curto_fase_terra_minimo)
     angulo_graus = math.degrees(angulo_radiano)
     return magnitude, angulo_graus
+
+def impedancia_acumulada_positiva(impedancia_atual, acumulada):
+    acumulada = impedancia_atual + acumulada
+    return acumulada
+
+def impedancia_acumulada_zero(impedancia_atual, acumulada):
+    acumulada = impedancia_atual + acumulada
+    return acumulada
