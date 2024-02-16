@@ -98,12 +98,22 @@ while True:
         
         elif escolha == "9":
 
-            comprimento = float(input('Qual o comprimento do alimentador: '))
-            cabos_paralelos = float(input('Digite quantos cabos por fase tem no circuito: '))
-            impedancia_alimentador_positiva,impedancia_alimentador_zero = executar_funcao_com_validacao(lambda:impedancia_alimentadores(comprimento, cabos_paralelos, potencia, tensao_secundaria_base))
-            impedancia_acumulada_positiva_trecho_03 = executar_funcao_com_validacao(lambda: impedancia_acumulada_positiva(impedancia_alimentador_positiva, impedancia_acumulada_positiva_trecho_02))
-            impedancia_acumulada_zero_trecho_02 = executar_funcao_com_validacao(lambda: impedancia_acumulada_zero(impedancia_alimentador_zero, impedancia_acumulada_zero_trecho_01))
-            print(impedancia_alimentador_positiva)
+            comprimento_alimentador, cabos_paralelos_alimentador = definir_alimentador()
+            comprimento_alimentador = verificar_variavel_completa('comprimento_alimentador', globals())
+            cabos_paralelos_alimentador = verificar_variavel_completa('cabos_paralelos_alimentador', globals())
+            potencia = verificar_variavel_completa('potencia', globals())
+            tensao_secundaria_base = verificar_variavel_completa('tensao_secundaria_base', globals())
+            impedancia_alimentador_positiva,impedancia_alimentador_zero = executar_funcao_com_validacao(impedancia_alimentadores,comprimento_alimentador, cabos_paralelos_alimentador, potencia, tensao_secundaria_base)
+
+            impedancia_alimentador_positiva = verificar_variavel_completa('impedancia_alimentador_positiva', globals())
+            impedancia_acumulada_positiva_trecho_02 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_02', globals())
+            impedancia_acumulada_positiva_trecho_03 = executar_funcao_com_validacao(impedancia_acumulada_positiva, impedancia_alimentador_positiva, impedancia_acumulada_positiva_trecho_02)
+            imprimir_resultado(impedancia_acumulada_positiva_trecho_03)
+
+            impedancia_alimentador_zero = verificar_variavel_completa('impedancia_alimentador_zero', globals())
+            impedancia_acumulada_zero_trecho_01 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_01', globals())
+            impedancia_acumulada_zero_trecho_02 = executar_funcao_com_validacao(impedancia_acumulada_zero, impedancia_alimentador_zero, impedancia_acumulada_zero_trecho_01)
+            imprimir_resultado(impedancia_acumulada_zero_trecho_02)
         
         elif escolha == "10":
 
