@@ -118,10 +118,19 @@ while True:
         elif escolha == "10":
 
             largura, espessura,comprimento_bar, quant_bar_por_fase = definir_barramento()
-            impedancia_barramento_modelado = executar_funcao_com_validacao(impedancia_barramento, largura, espessura, comprimento_bar, quant_bar_por_fase, potencia, tensao_secundaria_base)
-            impedancia_acumulada_positiva_trecho_04 = executar_funcao_com_validacao(impedancia_acumulada_positiva, impedancia_barramento_modelado, impedancia_acumulada_positiva_trecho_03)
+            largura = verificar_variavel_completa('largura', globals())
+            espessura = verificar_variavel_completa('espessura', globals())
+            comprimento_bar = verificar_variavel_completa('comprimento_bar', globals())
+            quant_bar_por_fase = verificar_variavel_completa('quant_bar_por_fase', globals())
 
+            impedancia_barramento_modelado = executar_funcao_com_validacao(impedancia_barramento, largura, espessura, comprimento_bar, quant_bar_por_fase, potencia, tensao_secundaria_base)
             imprimir_resultado(impedancia_barramento_modelado)
+
+            impedancia_barramento_modelado = verificar_variavel_completa('impedancia_barramento_modelado', globals())
+            impedancia_acumulada_positiva_trecho_03 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_03', globals())
+
+            impedancia_acumulada_positiva_trecho_04 = executar_funcao_com_validacao(impedancia_acumulada_positiva, impedancia_barramento_modelado, impedancia_acumulada_positiva_trecho_03)
+            imprimir_resultado(impedancia_acumulada_positiva_trecho_04)
         
         elif escolha == "11": 
 
