@@ -164,7 +164,7 @@ def verificar_dependencias(escolha, opcoes_escolhidas):
     "6": ["1"], # Opção 6 depende da opção 1
     "7": ["1", "2","6"], # Opção 7 depende de 1,2 e 6
     "8": ["1", "2", "6", "7"], # Opção 8 depende da 1,2,6 e 7
-    "9": ["1", "2"], # Opção 9 depende da 1,2
+    "9": ["1", "2", "7"], # Opção 9 depende da 1,2,7
    "10": ["1", "9"], # Opção 10 depende da 1 e 9
    "11": ["1", "2", "10"], # Opção 11 depende da 1,2 e 10
    "12": ["1", "9", "10"], # Opção 12 depende da 1, 9 e 10
