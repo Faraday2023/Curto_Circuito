@@ -87,8 +87,14 @@ while True:
         
         elif escolha == "8":
 
-            mono_secundario = executar_funcao_com_validacao(lambda: corrente_curto_monofasica(impedancia_acumulada_positiva_trecho_02, impedancia_reduzida_zero + impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria))
-            print(mono_secundario)
+            impedancia_acumulada_positiva_trecho_02 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_02', globals())
+            impedancia_reduzida_zero = verificar_variavel_completa('impedancia_reduzida_zero', globals())
+            impedancia_condutores_zero = verificar_variavel_completa('impedancia_condutores_zero', globals())
+            trafo_escolhido = verificar_variavel_completa('trafo_escolhido', globals())
+            corrente_base_secundaria = verificar_variavel_completa('corrente_base_secundaria', globals())
+
+            mono_secundario = executar_funcao_com_validacao(corrente_curto_monofasica, impedancia_acumulada_positiva_trecho_02, impedancia_reduzida_zero + impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
+            imprimir_resultado(mono_secundario)
         
         elif escolha == "9":
 
