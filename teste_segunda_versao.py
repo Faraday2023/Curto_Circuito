@@ -48,10 +48,6 @@ while True:
 
             tri = executar_funcao_com_validacao(corrente_curto_trifasica_simetrica, impedancia_reduzida_positiva, corrente_base_primaria)
 
-            if tri is not None:
-                tri = corrente_curto_trifasica_simetrica(impedancia_reduzida_positiva, corrente_base_primaria)
-                imprimir_resultado(tri)
-
         elif escolha == "4":
           
             impedancia_acumulada_positiva_trecho_01 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_01', globals())
@@ -62,24 +58,22 @@ while True:
 
             mono = executar_funcao_com_validacao(corrente_curto_monofasica, impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero, impedancia_trafo_zero, corrente_base_primaria) # Tirada impedancia do ramal de entrada (impedancia_condutores_zero), mais tarde irá ser acrescentada
 
-            if mono is not None:
-                mono = corrente_curto_monofasica( impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero, impedancia_trafo_zero, corrente_base_primaria) # ICC MONO MÁX
-                imprimir_resultado(mono)
-
         elif escolha == "5":
 
             tensao_primaria_base = verificar_variavel_completa('tensao_primaria_base', globals())
             corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria', globals())
             
             pot_cc = executar_funcao_com_validacao(potencia_de_curto_circuito, tensao_primaria_base, corrente_base_primaria) # POTÊNCIA DE CURTO-CIRCUITO
-
-            if pot_cc is not None:
-                pot_cc = potencia_de_curto_circuito(tensao_primaria_base, corrente_base_primaria) # ICC MONO MÁX
-                imprimir_resultado(pot_cc)
+            imprimir_resultado(pot_cc)
            
         elif escolha == "6":
-            trafo_escolhido = executar_funcao_com_validacao(lambda:tipo_transformador(tensao_primaria_base, str(tensao_secundaria_base), potencia)) # MODELANDO TRANSFORMADOR
-            print(trafo_escolhido)
+
+            tensao_primaria_base = verificar_variavel_completa('tensao_primaria_base', globals())
+            tensao_secundaria_base = verificar_variavel_completa('tensao_secundaria_base', globals())
+            potencia = verificar_variavel_completa('potencia', globals())
+            
+            trafo_escolhido = executar_funcao_com_validacao(tipo_transformador, tensao_primaria_base, str(tensao_secundaria_base), potencia) # MODELANDO TRANSFORMADOR
+            imprimir_resultado(trafo_escolhido)
         
         elif escolha == "7":
             
@@ -174,53 +168,3 @@ while True:
 
     if escolha == "0":
         break
-
-'''def verificar_dependencias(escolha, opcoes_escolhidas):
-    dependencias = {
-        "1": [],      # Opção 1 não depende de nenhuma outra
-        "2": ["1"],   # Opção 2 depende da opção 1
-        "3": ["1", "2"]    # Opção 3 depende da opção 2
-    }
-    dependencias_nao_atendidas = []
-    for dependencia in dependencias[escolha]:
-        if dependencia not in opcoes_escolhidas:
-            dependencias_nao_atendidas.append(dependencia)
-    if dependencias_nao_atendidas:
-        return dependencias_nao_atendidas
-    return True'''
-
-'''
-        elif escolha == "0":
-            break'''
-
-'''
-        else:
-            print('Opção inválida.')
-            sleep(1)'''
-
-
-'''
-    else:
-        print(f"Erro: Para escolher a opção {escolha}, você precisa primeiro escolher suas dependências.")'''
-'''
-def verificar_dependencias(escolha, opcoes_escolhidas):
-    dependencias = {
-        "1": [],      # Opção 1 não depende de nenhuma outra
-        "2": ["1"],   # Opção 2 depende da opção 1
-        "3": ["1", "2"]    # Opção 3 depende da opção 2
-    }
-    dependencias_nao_atendidas = []
-    for dependencia in dependencias[escolha]:
-        if dependencia not in opcoes_escolhidas:
-            dependencias_nao_atendidas.append(dependencia)
-    if dependencias_nao_atendidas:
-        return dependencias_nao_atendidas
-    return True
-
-# Verifica se todas as dependências da opção foram atendidas
-dependencias_nao_atendidas = verificar_dependencias(escolha, opcoes_escolhidas)
-if dependencias_nao_atendidas is not True:
-    print(f"Erro: Para escolher a opção {escolha}, você precisa primeiro escolher as opções {', '.join(dependencias_nao_atendidas)}.")
-'''
-    
-    
