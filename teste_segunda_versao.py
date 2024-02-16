@@ -67,9 +67,16 @@ while True:
                 imprimir_resultado(mono)
 
         elif escolha == "5":
-            pot_cc = executar_funcao_com_validacao(lambda:potencia_de_curto_circuito(tensao_primaria_base, corrente_base_primaria)) # POTÊNCIA DE CURTO-CIRCUITO
-            print(pot_cc)
-        
+
+            tensao_primaria_base = verificar_variavel_completa('tensao_primaria_base', globals())
+            corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria', globals())
+            
+            pot_cc = executar_funcao_com_validacao(potencia_de_curto_circuito, tensao_primaria_base, corrente_base_primaria) # POTÊNCIA DE CURTO-CIRCUITO
+
+            if pot_cc is not None:
+                pot_cc = potencia_de_curto_circuito(tensao_primaria_base, corrente_base_primaria) # ICC MONO MÁX
+                imprimir_resultado(pot_cc)
+           
         elif escolha == "6":
             trafo_escolhido = executar_funcao_com_validacao(lambda:tipo_transformador(tensao_primaria_base, str(tensao_secundaria_base), potencia)) # MODELANDO TRANSFORMADOR
             print(trafo_escolhido)
