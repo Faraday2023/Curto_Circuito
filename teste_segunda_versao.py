@@ -1,11 +1,8 @@
 # CÓDIGO DO MÓDULO 1
 
 # BIBLIOTECAS
-from funcionalidades import valores_base, obter_impedancia, corrente_curto_trifasica_simetrica, corrente_curto_monofasica
-from funcionalidades import potencia_de_curto_circuito, exibir_menu, tipo_transformador, impedancia_alimentadores, impedancia_barramento
-from funcionalidades import curto_assimétrico, impulso_da_corrente_de_curto_circuito, curto_bifasico, corrente_curto_monofasica_minima
-from funcionalidades import conversao_fisico_pu, mudanca_base, impedancia_acumulada_positiva, impedancia_acumulada_zero
-from validacao import executar_funcao_com_validacao, imprimir_resultado, executar_variavel_com_validacao, verificar_dependencias, verificar_variavel_completa
+from funcionalidades import *
+from validacao import *
 from time import sleep
 
 opcoes_escolhidas = []
@@ -46,8 +43,8 @@ while True:
             
         elif escolha == "3":
 
-            impedancia_reduzida_positiva = verificar_variavel_completa('impedancia_reduzida_positiva')
-            corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria')
+            impedancia_reduzida_positiva = verificar_variavel_completa('impedancia_reduzida_positiva', globals())
+            corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria', globals())
 
             tri = executar_funcao_com_validacao(corrente_curto_trifasica_simetrica, impedancia_reduzida_positiva, corrente_base_primaria)
 
@@ -56,26 +53,18 @@ while True:
                 imprimir_resultado(tri)
 
         elif escolha == "4":
-
-            globals_copy = globals().copy()
-            for var_name, var_value in globals_copy.items():
-                print(f"Variável '{var_name}': {var_value}")
           
-            impedancia_acumulada_positiva_trecho_01 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_01')
-            print(impedancia_acumulada_positiva_trecho_01)
-            impedancia_reduzida_zero = verificar_variavel_completa('impedancia_reduzida_zero')
-            print(impedancia_reduzida_zero)
-            impedancia_condutores_zero = verificar_variavel_completa('impedancia_condutores_zero')
-            print(impedancia_condutores_zero)
-            impedancia_trafo_zero = verificar_variavel_completa('impedancia_trafo_zero')
-            print(impedancia_trafo_zero)
-            corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria')
-            print(corrente_base_primaria)
+            impedancia_acumulada_positiva_trecho_01 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_01', globals())
+            impedancia_reduzida_zero = verificar_variavel_completa('impedancia_reduzida_zero', globals())
+            impedancia_condutores_zero = verificar_variavel_completa('impedancia_condutores_zero', globals())
+            impedancia_trafo_zero = verificar_variavel_completa('impedancia_trafo_zero', globals())
+            corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria', globals())
 
             mono = executar_funcao_com_validacao(corrente_curto_monofasica, impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero, impedancia_trafo_zero, corrente_base_primaria) # Tirada impedancia do ramal de entrada (impedancia_condutores_zero), mais tarde irá ser acrescentada
-            
-            mono = corrente_curto_monofasica( impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero, impedancia_trafo_zero, corrente_base_primaria) # ICC MONO MÁX
-            imprimir_resultado(mono)
+
+            if mono is not None:
+                mono = corrente_curto_monofasica( impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero, impedancia_trafo_zero, corrente_base_primaria) # ICC MONO MÁX
+                imprimir_resultado(mono)
 
         elif escolha == "5":
             pot_cc = executar_funcao_com_validacao(lambda:potencia_de_curto_circuito(tensao_primaria_base, corrente_base_primaria)) # POTÊNCIA DE CURTO-CIRCUITO
