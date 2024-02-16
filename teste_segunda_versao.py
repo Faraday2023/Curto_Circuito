@@ -24,8 +24,8 @@ while True:
         opcoes_escolhidas.append(escolha)
         
         if escolha == "1":
+
             corrente_base_primaria,corrente_base_secundaria,tensao_primaria_base,tensao_secundaria_base, potencia, impedancia_base_primaria, impedancia_base_secundaria = valores_base() # VALORES BASE DO SISTEMA
-            print(corrente_base_primaria,corrente_base_secundaria, tensao_primaria_base, tensao_secundaria_base, potencia)
 
         elif escolha == "2":
         # IMPEDÂNCIAS 
@@ -36,10 +36,8 @@ while True:
             impedancia_condutores_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO DOS CONDUTORES
             impedancia_acumulada_positiva_trecho_01 = executar_funcao_com_validacao(impedancia_acumulada_positiva,impedancia_reduzida_positiva,0)
             impedancia_acumulada_zero_trecho_01 = executar_funcao_com_validacao(impedancia_acumulada_zero,impedancia_condutores_zero,0)
-            impedancia_acumulada_positiva_trecho_01 = impedancia_acumulada_positiva(impedancia_reduzida_positiva, 0)
-            print(impedancia_acumulada_zero_trecho_01)
-            impedancia_acumulada_zero_trecho_01 = impedancia_acumulada_zero(impedancia_condutores_zero, 0)
-            print(impedancia_acumulada_zero_trecho_01)
+            #impedancia_acumulada_positiva_trecho_01 = impedancia_acumulada_positiva(impedancia_reduzida_positiva, 0)
+            #impedancia_acumulada_zero_trecho_01 = impedancia_acumulada_zero(impedancia_condutores_zero, 0)
             
         elif escolha == "3":
 
@@ -47,6 +45,7 @@ while True:
             corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria', globals())
 
             tri = executar_funcao_com_validacao(corrente_curto_trifasica_simetrica, impedancia_reduzida_positiva, corrente_base_primaria)
+            imprimir_resultado(tri)
 
         elif escolha == "4":
           
@@ -57,6 +56,7 @@ while True:
             corrente_base_primaria = verificar_variavel_completa('corrente_base_primaria', globals())
 
             mono = executar_funcao_com_validacao(corrente_curto_monofasica, impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero, impedancia_trafo_zero, corrente_base_primaria) # Tirada impedancia do ramal de entrada (impedancia_condutores_zero), mais tarde irá ser acrescentada
+            imprimir_resultado(mono)
 
         elif escolha == "5":
 
@@ -76,12 +76,14 @@ while True:
             imprimir_resultado(trafo_escolhido)
         
         elif escolha == "7":
+
+            trafo_escolhido = verificar_variavel_completa('trafo_escolhido', globals())
+            impedancia_acumulada_positiva_trecho_01 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_01', globals())
             
-            impedancia_acumulada_positiva_trecho_02 = executar_funcao_com_validacao(lambda: impedancia_acumulada_positiva(trafo_escolhido, impedancia_acumulada_positiva_trecho_01))
-            corrente_curto_terminal_trafo = executar_funcao_com_validacao(lambda: corrente_curto_trifasica_simetrica(impedancia_acumulada_positiva_trecho_02, corrente_base_secundaria))
-            print('*'*50)
-            print(corrente_base_primaria, corrente_base_secundaria)
-            print(corrente_curto_terminal_trafo)
+            impedancia_acumulada_positiva_trecho_02 = executar_funcao_com_validacao(impedancia_acumulada_positiva,trafo_escolhido, impedancia_acumulada_positiva_trecho_01)
+            corrente_curto_terminal_trafo = executar_funcao_com_validacao(corrente_curto_trifasica_simetrica, impedancia_acumulada_positiva_trecho_02, corrente_base_secundaria)
+            imprimir_resultado(impedancia_acumulada_positiva_trecho_02)
+            imprimir_resultado(corrente_curto_terminal_trafo)
         
         elif escolha == "8":
 
