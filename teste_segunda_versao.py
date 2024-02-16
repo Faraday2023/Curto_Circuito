@@ -147,12 +147,19 @@ while True:
         
         elif escolha == "12":
 
-            comprimento_circuito_QGF_CCM3 = float(input('Qual o comprimento do alimentador: '))
-            cabos_paralelos_QGF_CCM3 = float(input('Digite quantos cabos por fase tem no circuito: '))
-            impedancia_circuito_QGF_CCM3_positiva, impedancia_circuito_QGF_CCM3_zero = executar_funcao_com_validacao(lambda: impedancia_alimentadores(comprimento_circuito_QGF_CCM3, cabos_paralelos_QGF_CCM3, potencia, tensao_secundaria_base))
-            impedancia_acumulada_positiva_trecho_05 = executar_funcao_com_validacao(lambda: impedancia_acumulada_positiva(impedancia_circuito_QGF_CCM3_positiva, impedancia_acumulada_positiva_trecho_04))
-            impedancia_acumulada_zero_trecho_03 = executar_funcao_com_validacao(lambda: impedancia_acumulada_zero(impedancia_circuito_QGF_CCM3_zero, impedancia_acumulada_zero_trecho_02))
-            print(impedancia_circuito_QGF_CCM3_positiva)
+            comprimento_circuito_QGF_CCM3, cabos_paralelos_QGF_CCM3 = definir_alimentador()
+            comprimento_circuito_QGF_CCM3 = verificar_variavel_completa('comprimento_circuito_QGF_CCM3', globals())
+            cabos_paralelos_QGF_CCM3 = verificar_variavel_completa('cabos_paralelos_QGF_CCM3', globals())
+
+            impedancia_circuito_QGF_CCM3_positiva, impedancia_circuito_QGF_CCM3_zero = executar_funcao_com_validacao(impedancia_alimentadores, comprimento_circuito_QGF_CCM3, cabos_paralelos_QGF_CCM3, potencia, tensao_secundaria_base)
+            impedancia_circuito_QGF_CCM3_positiva = verificar_variavel_completa('impedancia_circuito_QGF_CCM3_positiva', globals())
+            impedancia_acumulada_positiva_trecho_05 = executar_funcao_com_validacao(impedancia_acumulada_positiva, impedancia_circuito_QGF_CCM3_positiva, impedancia_acumulada_positiva_trecho_04)
+            imprimir_resultado(impedancia_circuito_QGF_CCM3_positiva)
+
+            impedancia_circuito_QGF_CCM3_zero = verificar_variavel_completa('impedancia_circuito_QGF_CCM3_zero', globals())
+            impedancia_acumulada_zero_trecho_02 = verificar_variavel_completa('impedancia_acumulada_zero_trecho_02', globals())
+            impedancia_acumulada_zero_trecho_03 = executar_funcao_com_validacao(impedancia_acumulada_zero, impedancia_circuito_QGF_CCM3_zero, impedancia_acumulada_zero_trecho_02)
+            imprimir_resultado(impedancia_circuito_QGF_CCM3_zero)
         
         elif escolha == "13":
 
