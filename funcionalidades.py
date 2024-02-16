@@ -392,14 +392,14 @@ def definir_barramento():
     try:
         while True:
             # Solicita ao usuário que defina a largura do barramento
-            largura = input('Defina o comprimento do alimentador: ').strip()
+            largura = input('Defina a largura do barramento: ').strip()
             # Valida a entrada da largura
-            largura = validar_valor_float(largura)
+            #largura = validar_valor_float(largura)
             
             # Solicita ao usuário que insira a espessura do barramento
-            espessura = input('Digite quantos cabos por fase tem no circuito: ').strip()
+            espessura = input('Digite a espessura do barramento: ').strip()
             # Valida a entrada do barramento
-            espessura = validar_valor_float(espessura)
+           #espessura = validar_valor_float(espessura)
 
             # Solicita ao usuário que defina o comprimento do barramento
             comprimento_bar = input('Defina o comprimento do barramento: ').strip()
@@ -407,7 +407,7 @@ def definir_barramento():
             comprimento_bar = validar_valor_float(comprimento_bar)
             
             # Solicita ao usuário que insira quantas barras por fase existem
-            quant_bar_por_fase = input('Digite quantos cabos por fase tem no circuito: ').strip()
+            quant_bar_por_fase = input('Digite quantas barras por fase tem no circuito: ').strip()
             # Valida a entrada da quantidade de barras por fase
             quant_bar_por_fase = validar_valor_inteiro(quant_bar_por_fase)
 
