@@ -134,10 +134,16 @@ while True:
         
         elif escolha == "11": 
 
-            curto_simetrico_barramento = executar_funcao_com_validacao(lambda: corrente_curto_trifasica_simetrica(impedancia_acumulada_positiva_trecho_04, corrente_base_secundaria)) # ICC TRIFÁSICO
-            curto_monofasico_barramento = executar_funcao_com_validacao(lambda: corrente_curto_monofasica(impedancia_acumulada_positiva_trecho_04, impedancia_reduzida_zero + impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria))
-            print(curto_simetrico_barramento)
-            print(curto_monofasico_barramento)
+            impedancia_acumulada_positiva_trecho_04 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_04', globals())
+            corrente_base_secundaria = verificar_variavel_completa('corrente_base_secundaria', globals())
+            curto_simetrico_barramento = executar_funcao_com_validacao(corrente_curto_trifasica_simetrica, impedancia_acumulada_positiva_trecho_04, corrente_base_secundaria) # ICC TRIFÁSICO
+            imprimir_resultado(curto_simetrico_barramento)
+
+            impedancia_reduzida_zero = verificar_variavel_completa('impedancia_reduzida_zero', globals())
+            impedancia_condutores_zero = verificar_variavel_completa('impedancia_condutores_zero', globals())
+            trafo_escolhido = verificar_variavel_completa('trafo_escolhido', globals())
+            curto_monofasico_barramento = executar_funcao_com_validacao(corrente_curto_monofasica, impedancia_acumulada_positiva_trecho_04, impedancia_reduzida_zero + impedancia_condutores_zero, trafo_escolhido, corrente_base_secundaria)
+            imprimir_resultado(curto_monofasico_barramento)
         
         elif escolha == "12":
 
