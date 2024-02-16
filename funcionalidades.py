@@ -98,7 +98,7 @@ def conversao_fisico_pu(valor_fisico = None, valor_base = None):
 
     # Verificar se todos os argumentos foram fornecidos
     for arg, nome in argumentos:
-        if not verificar_argumentos_explicitos(arg, nome, 1): # Passo aqui precisa ser definido ainda
+        if not verificar_argumentos_explicitos(arg, nome): # Passo aqui precisa ser definido ainda
             return None
 
     valor_fisico = validar_valor_float(valor_fisico)
@@ -139,7 +139,7 @@ def corrente_curto_trifasica_simetrica(impedancia_reduzida_sistema = None, corre
 
     # Verificar se todos os argumentos foram fornecidos
     for arg, nome in argumentos:
-        if not verificar_argumentos_explicitos(arg, nome, 1): # Passo aqui precisa ser definido ainda
+        if not verificar_argumentos_explicitos(arg, nome): # Passo aqui precisa ser definido ainda
             return None
     
     curto_trifasico_simetrico = (1/(impedancia_reduzida_sistema)) * corrente_base
