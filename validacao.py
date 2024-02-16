@@ -82,15 +82,10 @@ Menos flexível: Se você adicionar ou remover argumentos na função, precisar�
             print(f"- '{arg_name}'")
         return False
     return True
-'''
-def executar_funcao_com_validacao(funcao):
-    try:
-        return funcao()
-    except NameError as e:
-        print(f"Erro: Uma variável não está definida. Detalhes: {e}")
-        return None'''
+
 def imprimir_resultado(resultado):
     if resultado is not None:
+        print('-'*100)
         print(resultado)
 
 def executar_funcao_com_validacao(funcao, *args, **kwargs):
@@ -127,13 +122,13 @@ def verificar_variavel(variavel):
     
 # Verifica se a variável está declarada e vazia
 def verificar_variavel_completa(variavel, global_vars):
-    globals_copy = global_vars.copy()
+    '''globals_copy = global_vars.copy()
     for var_name, var_value in globals_copy.items():
-        print(f"Variável '{var_name}': {var_value}")
+        print(f"Variável '{var_name}': {var_value}")'''
 
     if variavel in global_vars:
         valor = global_vars[variavel]
-        print(f'O valor é: {valor}')
+        #print(f'O valor é: {valor}')
         if valor:
             return valor
         else:
@@ -188,11 +183,3 @@ def verificar_dependencias(escolha, opcoes_escolhidas):
     if dependencias_nao_atendidas:
         return dependencias_nao_atendidas
     return None
-'''
-    dependencias_nao_atendidas = [opcao for opcao in dependencias[escolha] if opcao not in opcoes_escolhidas]
-    return dependencias_nao_atendidas'''
-'''
-    for dependencia in dependencias[escolha]:
-        if dependencia not in opcoes_escolhidas:
-            return False
-    return True'''
