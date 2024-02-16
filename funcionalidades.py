@@ -368,3 +368,52 @@ def impedancia_acumulada_positiva(impedancia_atual, acumulada):
 def impedancia_acumulada_zero(impedancia_atual, acumulada):
     acumulada = impedancia_atual + acumulada
     return acumulada
+
+def definir_alimentador():
+    try:
+        while True:
+            # Solicita ao usuário que defina o comprimento do alimentador
+            comprimento = input('Defina o comprimento do alimentador: ').strip()
+            # Valida a entrada do comprimento
+            comprimento = validar_valor_float(comprimento)
+            
+            # Solicita ao usuário que insira a quantidade de cabos paralelos
+            cabos_paralelos = input('Digite quantos cabos por fase tem no circuito: ').strip()
+            # Valida a entrada dso cabos paralelos
+            cabos_paralelos = validar_valor_inteiro(cabos_paralelos)
+
+            return comprimento, cabos_paralelos
+    
+    except KeyboardInterrupt:
+        print("\nPrograma encerrado pelo usuário.")
+        return None
+
+def definir_barramento():
+    try:
+        while True:
+            # Solicita ao usuário que defina a largura do barramento
+            largura = input('Defina o comprimento do alimentador: ').strip()
+            # Valida a entrada da largura
+            largura = validar_valor_float(largura)
+            
+            # Solicita ao usuário que insira a espessura do barramento
+            espessura = input('Digite quantos cabos por fase tem no circuito: ').strip()
+            # Valida a entrada do barramento
+            espessura = validar_valor_float(espessura)
+
+            # Solicita ao usuário que defina o comprimento do barramento
+            comprimento_bar = input('Defina o comprimento do barramento: ').strip()
+            # Valida a entrada do comprimento
+            comprimento_bar = validar_valor_float(comprimento_bar)
+            
+            # Solicita ao usuário que insira quantas barras por fase existem
+            quant_bar_por_fase = input('Digite quantos cabos por fase tem no circuito: ').strip()
+            # Valida a entrada da quantidade de barras por fase
+            quant_bar_por_fase = validar_valor_inteiro(quant_bar_por_fase)
+
+            return largura, espessura, comprimento_bar, quant_bar_por_fase
+    
+    except KeyboardInterrupt:
+        print("\nPrograma encerrado pelo usuário.")
+        return None
+
