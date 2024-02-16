@@ -26,16 +26,17 @@ while True:
         impedancia_reduzida_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO REDUZIDA DO SISTEMA
         impedancia_trafo_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO DO TRANSFORMADOR
         impedancia_condutores_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO DOS CONDUTORES
-
+        impedancia_acumulada_positiva_trecho_01 = executar_funcao_com_validacao(lambda: impedancia_acumulada_positiva(impedancia_reduzida_positiva,0))
+        impedancia_acumulada_zero_trecho_01 = executar_funcao_com_validacao(lambda: impedancia_acumulada_zero(impedancia_condutores_zero, 0))
+        
     elif escolha == "3":
 
-        tri = executar_funcao_com_validacao(lambda: corrente_curto_trifasica_simetrica(impedancia_reduzida_positiva, corrente_base_primaria))
+        tri = executar_funcao_com_validacao(lambda:corrente_curto_trifasica_simetrica(impedancia_reduzida_positiva, corrente_base_primaria))
         imprimir_resultado(tri)
 
     elif escolha == "4":
         #impedancia_acumulada = impedancia_reduzida_positiva + impedancia_trafo_zero
-        impedancia_acumulada_positiva_trecho_01 = executar_funcao_com_validacao(lambda: impedancia_acumulada_positiva(impedancia_reduzida_positiva,0))
-        impedancia_acumulada_zero_trecho_01 = executar_funcao_com_validacao(lambda: impedancia_acumulada_zero(impedancia_condutores_zero, 0))
+        
         mono = executar_funcao_com_validacao(lambda:corrente_curto_monofasica(impedancia_acumulada_positiva_trecho_01, impedancia_reduzida_zero + impedancia_condutores_zero, impedancia_trafo_zero, corrente_base_primaria)) # ICC MONO MÁX
         imprimir_resultado(mono)
 
