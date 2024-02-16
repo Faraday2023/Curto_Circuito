@@ -117,14 +117,11 @@ while True:
         
         elif escolha == "10":
 
-            largura = str(input('Qual a largura do barramento: '))
-            espessura = str(input('Digite a espessura do barramento: '))
-            comprimento_bar = float(input('Digite o comprimento do barramento: '))
-            quant_bar_por_fase = float(input('Digite quantas barras por fase: '))
-            impedancia_barramento_modelado = executar_funcao_com_validacao(lambda: impedancia_barramento(largura, espessura, comprimento_bar, quant_bar_por_fase, potencia, tensao_secundaria_base))
-            impedancia_acumulada_positiva_trecho_04 = executar_funcao_com_validacao(lambda: impedancia_acumulada_positiva(impedancia_barramento_modelado, impedancia_acumulada_positiva_trecho_03))
+            largura, espessura,comprimento_bar, quant_bar_por_fase = definir_barramento()
+            impedancia_barramento_modelado = executar_funcao_com_validacao(impedancia_barramento, largura, espessura, comprimento_bar, quant_bar_por_fase, potencia, tensao_secundaria_base)
+            impedancia_acumulada_positiva_trecho_04 = executar_funcao_com_validacao(impedancia_acumulada_positiva, impedancia_barramento_modelado, impedancia_acumulada_positiva_trecho_03)
 
-            print(impedancia_barramento_modelado)
+            imprimir_resultado(impedancia_barramento_modelado)
         
         elif escolha == "11": 
 
