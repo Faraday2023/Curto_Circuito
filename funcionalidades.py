@@ -417,3 +417,9 @@ def definir_barramento():
         print("\nPrograma encerrado pelo usuário.")
         return None
 
+def extrair_impedancia(impedancia):
+    real = impedancia.real()
+    imag = impedancia.imag()
+    
+    return real, imag
+
