@@ -178,8 +178,9 @@ while True:
         
         elif escolha == "15":
 
-            impulso = impulso_da_corrente_de_curto_circuito(curto_assimetrico)
-            print(impulso)
+            curto_assimetrico = verificar_variavel_completa('curto_assimetrico', globals())
+            impulso = executar_funcao_com_validacao(impulso_da_corrente_de_curto_circuito, curto_assimetrico)
+            imprimir_resultado(impulso)
         
         elif escolha == "16":
 
