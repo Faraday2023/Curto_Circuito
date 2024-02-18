@@ -36,8 +36,6 @@ while True:
             impedancia_condutores_zero = obter_impedancia() # IMPEDÂNCIA DE SEQUÊNCIA ZERO DOS CONDUTORES
             impedancia_acumulada_positiva_trecho_01 = executar_funcao_com_validacao(impedancia_acumulada_positiva,impedancia_reduzida_positiva,0)
             impedancia_acumulada_zero_trecho_01 = executar_funcao_com_validacao(impedancia_acumulada_zero,impedancia_condutores_zero,0)
-            #impedancia_acumulada_positiva_trecho_01 = impedancia_acumulada_positiva(impedancia_reduzida_positiva, 0)
-            #impedancia_acumulada_zero_trecho_01 = impedancia_acumulada_zero(impedancia_condutores_zero, 0)
             
         elif escolha == "3":
 
@@ -163,8 +161,10 @@ while True:
         
         elif escolha == "13":
 
-            curto_no_ccm = corrente_curto_trifasica_simetrica(impedancia_acumulada_positiva_trecho_05, corrente_base_secundaria) # ICC TRIFÁSICO
-            print(curto_no_ccm)
+            impedancia_acumulada_positiva_trecho_05 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_05', globals())
+            corrente_base_secundaria = verificar_variavel_completa('corrente_base_secundaria', globals())
+            curto_no_ccm = executar_funcao_com_validacao(corrente_curto_trifasica_simetrica, impedancia_acumulada_positiva_trecho_05, corrente_base_secundaria) # ICC TRIFÁSICO
+            imprimir_resultado(curto_no_ccm)
         
         elif escolha == "14":
 
