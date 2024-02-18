@@ -184,8 +184,9 @@ while True:
         
         elif escolha == "16":
 
-            curto_bif = curto_bifasico(curto_assimetrico)
-            print(curto_bif)
+            curto_assimetrico = verificar_variavel_completa('curto_assimetrico', globals())
+            curto_bif = executar_funcao_com_validacao(curto_bifasico, curto_assimetrico)
+            imprimir_resultado(curto_bif)
         
         elif escolha == "17":
 
