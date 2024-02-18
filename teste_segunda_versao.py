@@ -201,16 +201,30 @@ while True:
         
         elif escolha == "18":
 
-            re_contato = int(input('Digite a resistência de contato: '))
+            re_contato, re_malha, re_resistor = resistencias_aterramento()
+
+            re_contato = verificar_variavel_completa('re_contato', globals())
+            re_malha = verificar_variavel_completa('re_malha', globals())
+            re_resistor = verificar_variavel_completa('re_resistor', globals())
+
             re_contato_pu = conversao_fisico_pu(re_contato, impedancia_base_secundaria)
-            re_malha = int(input('Digite a resistencia da malha de aterramento: '))
             re_malha_pu = conversao_fisico_pu(re_malha, impedancia_base_secundaria)
-            re_resistor = int(input('Digite o valor do resistor de aterramento: '))
             re_resistor_pu = conversao_fisico_pu(re_resistor, impedancia_base_secundaria)
 
-            curto_minimo = corrente_curto_monofasica_minima(impedancia_acumulada_positiva_trecho_05, impedancia_acumulada_zero_trecho_03, impedancia_trafo_zero, corrente_base_secundaria, re_contato_pu, re_malha_pu, re_resistor_pu)
-            print(impedancia_acumulada_positiva_trecho_05, impedancia_acumulada_zero_trecho_02, trafo_escolhido, re_contato_pu, re_malha_pu, re_resistor_pu)
-            print(curto_minimo)
+            re_contato_pu = verificar_variavel_completa('re_contato_pu', globals())
+            re_malha_pu = verificar_variavel_completa('re_malha_pu', globals())
+            re_resistor_pu = verificar_variavel_completa('re_resistor_pu', globals())
 
-    if escolha == "0":
-        break
+            impedancia_acumulada_positiva_trecho_05 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_05', globals())
+            impedancia_acumulada_zero_trecho_03 = verificar_variavel_completa('impedancia_acumulada_zero_trecho_03')
+            impedancia_trafo_zero = verificar_variavel_completa('impedancia_trafo_zero', globals())
+            corrente_base_secundaria = verificar_variavel_completa('corrente_base_secundaria', globals())
+
+            curto_minimo = executar_funcao_com_validacao(corrente_curto_monofasica_minima, impedancia_acumulada_positiva_trecho_05, impedancia_acumulada_zero_trecho_03, impedancia_trafo_zero, corrente_base_secundaria, re_contato_pu, re_malha_pu, re_resistor_pu)
+            imprimir_resultado(curto_minimo)
+
+        elif escolha == "0":
+            break
+
+        else:
+            print('Opção inválida')
