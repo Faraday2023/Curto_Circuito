@@ -190,9 +190,14 @@ while True:
         
         elif escolha == "17":
 
-            #impedancia_acumulada_zero = impedancia_alimentador_zero + impedancia_circuito_QGF_CCM3_zero
-            mono_max = corrente_curto_monofasica(impedancia_acumulada_positiva_trecho_05, impedancia_acumulada_zero_trecho_03, trafo_escolhido, corrente_base_secundaria) # ICC MONO MÁX
-            print(mono_max)
+            impedancia_acumulada_positiva_trecho_05 = verificar_variavel_completa('impedancia_acumulada_positiva_trecho_05', globals())
+            impedancia_acumulada_zero_trecho_03 = verificar_variavel_completa('impedancia_acumulada_zero_trecho_03')
+            trafo_escolhido = verificar_variavel_completa('trafo_escolhido', globals())
+            corrente_base_secundaria = verificar_variavel_completa('corrente_base_secundaria', globals())
+ 
+            mono_max = executar_funcao_com_validacao(corrente_curto_monofasica, impedancia_acumulada_positiva_trecho_05, impedancia_acumulada_zero_trecho_03, trafo_escolhido, corrente_base_secundaria) # ICC MONO MÁX
+            imprimir_resultado(mono_max)
+            
         
         elif escolha == "18":
 
