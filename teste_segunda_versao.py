@@ -168,11 +168,13 @@ while True:
         
         elif escolha == "14":
 
-            real = impedancia_acumulada_positiva_trecho_05.real
-            imag = impedancia_acumulada_positiva_trecho_05.imag
+            real, imag = extrair_impedancia(impedancia_acumulada_positiva_trecho_05)
 
-            curto_assimetrico = curto_assimétrico(real, imag, curto_no_ccm)
-            print(curto_assimetrico)
+            real = verificar_variavel_completa('real', globals())
+            imag = verificar_variavel_completa('imag', globals())
+            curto_no_ccm = verificar_variavel_completa('curto_no_ccm', globals())
+            curto_assimetrico = executar_funcao_com_validacao(curto_assimétrico, real, imag, curto_no_ccm)
+            imprimir_resultado(curto_assimetrico)
         
         elif escolha == "15":
 
